@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 
 const properties = [
   { place: "Goa · India", name: "Casa Aurelia", meta: "5 beds · 7 baths · 11,200 sq ft", price: "₹18.5 Cr", pos: "70% center" },
@@ -35,7 +34,7 @@ export default function Home() {
       <div className="grain" />
       <header className="nav">
         <a className="brand" href="#top" aria-label="ARIKA REALTY home">
-          <Image className="brand-logo" src="/arika-logo-transparent.png" alt="ARIKA REALTY — Building Legacies" width={1280} height={853} priority />
+          <img className="brand-logo" src="/arika-logo-transparent.png" alt="ARIKA REALTY — Building Legacies" width="1280" height="853" />
         </a>
         <nav aria-label="Primary navigation">
           <a href="#residences">Residences</a><a href="#story">Our story</a><a href="#journal">Journal</a>
@@ -45,7 +44,7 @@ export default function Home() {
       </header>
 
       <div className={`menu-panel ${menu ? "open" : ""}`}>
-        <div className="menu-head"><Image src="/arika-logo-transparent.png" alt="ARIKA REALTY" width={1280} height={853}/><button onClick={() => setMenu(false)} aria-label="Close menu">Close ×</button></div>
+        <div className="menu-head"><img src="/arika-logo-transparent.png" alt="ARIKA REALTY" width="1280" height="853"/><button onClick={() => setMenu(false)} aria-label="Close menu">Close ×</button></div>
         {["Residences", "Our story", "Journal", "Contact"].map((x, i) => <a key={x} onClick={() => setMenu(false)} href={`#${x.toLowerCase().replace(" ", "-")}`}><small>0{i+1}</small>{x}</a>)}
       </div>
 
@@ -98,7 +97,7 @@ export default function Home() {
       <footer id="contact">
         <div className="footer-top reveal"><p className="eyebrow">Your next chapter</p><h2>Let’s find<br/><em>what moves you.</em></h2><a href="mailto:hello@arikarealty.com">Start a conversation <Arrow/></a></div>
         <div className="footer-mid"><div><small>ENQUIRIES</small><a href="mailto:hello@arikarealty.com">hello@arikarealty.com</a><a href="tel:+919810001001">+91 98100 01001</a></div><div><small>VISIT</small><p>Mumbai · Bengaluru · Goa<br/>By private appointment</p></div><div><small>FOLLOW</small><a href="#">Instagram</a><a href="#">LinkedIn</a></div><form onSubmit={e=>e.preventDefault()}><small>PRIVATE NOTES</small><label><input type="email" aria-label="Email address" placeholder="Your email address"/><button aria-label="Subscribe">→</button></label></form></div>
-        <div className="footer-brand"><Image src="/arika-logo-transparent.png" alt="ARIKA REALTY — Building Legacies" width={1280} height={853}/></div><div className="legal"><span>© 2026 ARIKA REALTY</span><span>Privacy · Terms · RERA</span><span>Made for remarkable living</span></div>
+        <div className="footer-brand"><img src="/arika-logo-transparent.png" alt="ARIKA REALTY — Building Legacies" width="1280" height="853"/></div><div className="legal"><span>© 2026 ARIKA REALTY</span><span>Privacy · Terms · RERA</span><span>Made for remarkable living</span></div>
       </footer>
     </main>
   );
