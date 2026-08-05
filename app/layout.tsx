@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "ARIKA REALTY — Extraordinary Homes",
   description: "Exceptional homes, quietly discovered. Private real estate advisory across India and beyond.",
-  icons: { icon: "/favicon.svg" },
+  icons: { icon: "/arika-logo-transparent.png", apple: "/arika-logo-transparent.png" },
   metadataBase: new URL("https://arikarealty.com"),
   openGraph: {
     title: "ARIKA REALTY — Extraordinary Homes",
