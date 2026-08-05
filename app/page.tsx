@@ -66,13 +66,17 @@ export default function Home() {
         <div className="intro-bottom reveal"><p>We represent a considered collection of remarkable homes and the people drawn to them. Every introduction is personal. Every detail, intentional.</p><a className="circle-link" href="#contact">Our approach <Arrow/></a></div>
       </section>
 
-      <section className="finder" aria-label="Property search">
-        <div className="finder-head reveal"><div><p className="eyebrow">Begin your search</p><h2>Where will life<br/><em>take you?</em></h2></div><div className="mode-switch">{["Buy","Rent"].map(x => <button onClick={() => setMode(x)} className={mode===x?"active":""} key={x}>{x}</button>)}</div></div>
+      <section className="finder" aria-label="Property search" onPointerMove={(event) => {
+        const bounds = event.currentTarget.getBoundingClientRect();
+        event.currentTarget.style.setProperty("--fx", `${event.clientX - bounds.left}px`);
+        event.currentTarget.style.setProperty("--fy", `${event.clientY - bounds.top}px`);
+      }}>
+        <div className="finder-head reveal"><div><p className="eyebrow">Begin your search</p><h2>Where will life<br/><em>take you?</em></h2></div><div className={`mode-switch ${mode === "Rent" ? "is-rent" : ""}`}>{["Buy","Rent"].map(x => <button type="button" aria-pressed={mode===x} onClick={() => setMode(x)} className={mode===x?"active":""} key={x}>{x}</button>)}</div></div>
         <form className="search-bar reveal" onSubmit={(e) => e.preventDefault()}>
           <label><span>01 / Location</span><input aria-label="Location" placeholder="City, neighbourhood or landmark" /></label>
           <label><span>02 / Property type</span><select aria-label="Property type"><option>All residences</option><option>Villa</option><option>Penthouse</option><option>Estate</option></select></label>
           <label><span>03 / Price range</span><select aria-label="Price range"><option>Any price</option><option>₹5–10 Cr</option><option>₹10–20 Cr</option><option>₹20 Cr+</option></select></label>
-          <button className="search-submit">View {mode === "Buy" ? "properties" : "rentals"} <Arrow/></button>
+          <button className="search-submit"><span className="mode-copy" key={mode}>View {mode === "Buy" ? "properties" : "rentals"}</span> <Arrow/></button>
         </form>
       </section>
 
