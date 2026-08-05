@@ -92,7 +92,6 @@ export default function Home() {
         {["Find","Sell","Invest"].map((x,i)=><a
           href="#contact"
           className="service reveal"
-          data-service={x.toLowerCase()}
           key={x}
           onPointerMove={(event) => {
             const bounds = event.currentTarget.getBoundingClientRect();
@@ -102,7 +101,6 @@ export default function Home() {
         >
           <small className="service-index">0{i+1}</small>
           <span className="service-title">{x}</span>
-          <i className="service-image" aria-hidden="true" />
           <p>{i===0?"Discover a place that feels inevitable.":i===1?"Position your property with precision.":"Build a portfolio with quiet confidence."}</p>
           <b aria-hidden="true">↗</b>
         </a>)}
