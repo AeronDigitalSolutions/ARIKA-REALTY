@@ -89,7 +89,23 @@ export default function Home() {
 
       <section className="services">
         <p className="eyebrow reveal">What moves you</p>
-        {["Find","Sell","Invest"].map((x,i)=><a href="#contact" className="service reveal" key={x}><small>0{i+1}</small><span>{x}</span><p>{i===0?"Discover a place that feels inevitable.":i===1?"Position your property with precision.":"Build a portfolio with quiet confidence."}</p><b>↗</b></a>)}
+        {["Find","Sell","Invest"].map((x,i)=><a
+          href="#contact"
+          className="service reveal"
+          data-service={x.toLowerCase()}
+          key={x}
+          onPointerMove={(event) => {
+            const bounds = event.currentTarget.getBoundingClientRect();
+            event.currentTarget.style.setProperty("--mx", `${event.clientX - bounds.left}px`);
+            event.currentTarget.style.setProperty("--my", `${event.clientY - bounds.top}px`);
+          }}
+        >
+          <small className="service-index">0{i+1}</small>
+          <span className="service-title">{x}</span>
+          <i className="service-image" aria-hidden="true" />
+          <p>{i===0?"Discover a place that feels inevitable.":i===1?"Position your property with precision.":"Build a portfolio with quiet confidence."}</p>
+          <b aria-hidden="true">↗</b>
+        </a>)}
       </section>
 
       <section className="quote" id="journal"><p className="eyebrow reveal">Private advisory</p><blockquote className="reveal">“The finest service is felt<br/>in what you <em>never</em> have<br/>to ask for.”</blockquote><p className="quote-note reveal">Local intelligence. Global perspective.<br/>Absolute discretion.</p></section>
