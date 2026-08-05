@@ -1,8 +1,6 @@
-# vinext-starter
+# ARIKA-REALTY
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+A premium real-estate website for ARIKA REALTY, built with React and vinext.
 
 ## Prerequisites
 
