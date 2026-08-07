@@ -15,17 +15,75 @@ export default function Home() {
   const [mode, setMode] = useState("Buy");
   const [saved, setSaved] = useState<number[]>([]);
   const cursor = useRef<HTMLDivElement>(null);
+  const parallax = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
       if (cursor.current) cursor.current.style.transform = `translate3d(${e.clientX}px,${e.clientY}px,0)`;
     };
-    const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
-      if (entry.isIntersecting) entry.target.classList.add("is-visible");
-    }), { threshold: .13 });
-    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+    const reveals = document.querySelectorAll<HTMLElement>(".reveal");
+    reveals.forEach((el) => {
+      const section = el.closest("section, footer");
+      const siblings = section ? Array.from(section.querySelectorAll(".reveal")) : [];
+      const order = Math.min(4, Math.max(0, siblings.indexOf(el)));
+      el.style.setProperty("--motion-delay", `${order * 90}ms`);
+    });
+    const motionSections = document.querySelectorAll<HTMLElement>("main > section, main > footer");
+    motionSections.forEach((section, index) => {
+      section.classList.add("motion-section");
+      section.dataset.motionIndex = String(index);
+    });
+
+    const setMotionState = (section: HTMLElement, state: "before" | "active" | "after") => {
+      if (section.classList.contains(`motion-${state}`)) return;
+      section.classList.remove("motion-before", "motion-active", "motion-after");
+      section.classList.add(`motion-${state}`);
+      section.querySelectorAll<HTMLElement>(".reveal").forEach((element) => {
+        element.classList.toggle("is-visible", state === "active");
+        element.classList.toggle("is-past", state === "after");
+      });
+    };
+    const updateSectionMotion = () => {
+      const viewport = window.innerHeight;
+      motionSections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        const visiblePixels = Math.max(0, Math.min(rect.bottom, viewport) - Math.max(rect.top, 0));
+        const visibleRatio = visiblePixels / Math.max(1, Math.min(rect.height, viewport));
+        const isActive = section.classList.contains("motion-active");
+        let state: "before" | "active" | "after";
+        if (rect.bottom <= 0) state = "after";
+        else if (rect.top >= viewport) state = "before";
+        else if (isActive && visibleRatio > .4) state = "active";
+        else if (!isActive && visibleRatio >= .6) state = "active";
+        else state = rect.top < 0 ? "after" : "before";
+        setMotionState(section, state);
+      });
+    };
+    let frame = 0;
+    const updateParallax = () => {
+      frame = 0;
+      updateSectionMotion();
+      const scene = parallax.current;
+      if (!scene) return;
+      const rect = scene.getBoundingClientRect();
+      const distance = Math.max(1, rect.height - window.innerHeight);
+      const progress = Math.min(1, Math.max(0, -rect.top / distance));
+      scene.style.setProperty("--p", progress.toFixed(4));
+
+    };
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateParallax);
+    };
+    updateParallax();
     window.addEventListener("mousemove", onMove);
-    return () => { window.removeEventListener("mousemove", onMove); observer.disconnect(); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
   }, []);
 
   return (
@@ -48,7 +106,39 @@ export default function Home() {
         {["Residences", "Our story", "Journal", "Contact"].map((x, i) => <a key={x} onClick={() => setMenu(false)} href={`#${x.toLowerCase().replace(" ", "-")}`}><small>0{i+1}</small>{x}</a>)}
       </div>
 
-      <section className="hero" id="top">
+      <section
+        className="parallax-hero"
+        id="top"
+        ref={parallax}
+        onPointerMove={(event) => {
+          const bounds = event.currentTarget.getBoundingClientRect();
+          event.currentTarget.style.setProperty("--px", ((event.clientX / bounds.width) - .5).toFixed(3));
+          event.currentTarget.style.setProperty("--py", ((event.clientY / window.innerHeight) - .5).toFixed(3));
+        }}
+        onPointerLeave={(event) => {
+          event.currentTarget.style.setProperty("--px", "0");
+          event.currentTarget.style.setProperty("--py", "0");
+        }}
+      >
+        <div className="parallax-stage">
+          <img className="parallax-sky" src="/parallax-sky.png" alt="" aria-hidden="true" />
+          <div className="parallax-haze" />
+          <img className="parallax-cloud parallax-cloud-far" src="/parallax-cloud-far-alpha.png" alt="" aria-hidden="true" />
+          <div className="parallax-ghost" aria-hidden="true">ARIKA</div>
+          <div className="parallax-copy">
+            <p className="eyebrow">Private residences · India &amp; beyond</p>
+            <h1><span>Built beyond</span><em>the expected.</em></h1>
+            <p>Rare addresses. Considered architecture.<br/>A legacy shaped around you.</p>
+            <a href="#legacy">Discover ARIKA <Arrow/></a>
+          </div>
+          <img className="parallax-house" src="/parallax-house.png" alt="Contemporary luxury residence represented by ARIKA REALTY" />
+          <img className="parallax-cloud parallax-cloud-near" src="/parallax-cloud-near-alpha.png" alt="" aria-hidden="true" />
+          <div className="parallax-vignette" />
+          <div className="parallax-meta"><span>AR—00</span><span>Scroll to enter</span><i>↓</i></div>
+        </div>
+      </section>
+
+      <section className="hero hero-secondary" id="legacy">
         <div className="hero-media" />
         <div className="hero-shade" />
         <div className="hero-copy">
