@@ -1,11 +1,33 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Lenis from "lenis";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const properties = [
-  { place: "Goa · India", name: "Casa Aurelia", meta: "5 beds · 7 baths · 11,200 sq ft", price: "₹18.5 Cr", pos: "70% center" },
-  { place: "Alibaug · India", name: "The Quiet House", meta: "4 beds · 5 baths · 8,400 sq ft", price: "₹12.8 Cr", pos: "100% center" },
-  { place: "Bengaluru · India", name: "Atelier 27", meta: "4 beds · 4 baths · 6,100 sq ft", price: "₹9.4 Cr", pos: "48% center" },
+  { place: "Goa · India", name: "Casa Aurelia", meta: "5 beds · 7 baths · 11,200 sq ft", price: "₹18.5 Cr", image: "/pexels-john-zook-2388999-5223143.jpg.jpeg", pos: "center 42%", description: "A light-filled coastal residence shaped by courtyards, native planting and an uninterrupted relationship with the sea." },
+  { place: "Alibaug · India", name: "The Quiet House", meta: "4 beds · 5 baths · 8,400 sq ft", price: "₹12.8 Cr", image: "/pexels-volkerthimm-27307398.jpg.jpeg", pos: "center 48%", description: "A private retreat where monolithic stone, deep verandas and tropical gardens create a rare sense of stillness." },
+  { place: "Bengaluru · India", name: "Atelier 27", meta: "4 beds · 4 baths · 6,100 sq ft", price: "₹9.4 Cr", image: "/pexels-shox-34360413.jpg.jpeg", pos: "center 52%", description: "A contemporary city home balancing gallery-like volumes with warm, intimate spaces for everyday life." },
+];
+
+const advisoryServices = [
+  { title: "Find a residence", text: "Private access to homes selected around the way you want to live.", image: "/pexels-abhishek-mishra-277771722-17343501.jpg.jpeg" },
+  { title: "Sell with ARIKA", text: "Precise positioning, discreet introductions and a story worthy of the address.", image: "/pexels-aj33-449362239-28796447.jpg.jpeg" },
+  { title: "Private investment", text: "Clear intelligence for considered acquisitions and enduring value.", image: "/pexels-asim-34160274-7096209.jpg.jpeg" },
+  { title: "Bespoke advisory", text: "One trusted point of view across property, place and possibility.", image: "/pexels-omergulen-19366884.jpg.jpeg" },
+];
+
+const testimonials = [
+  { quote: "ARIKA understood that we were not simply buying a house. They helped us find the setting for our family’s next chapter.", name: "Private client", role: "Goa residence" },
+  { quote: "Every introduction was thoughtful, every detail anticipated. The entire experience felt calm, exacting and entirely personal.", name: "Ananya & Rohan M.", role: "Bengaluru" },
+  { quote: "Their discretion and market instinct gave us the confidence to make an exceptional acquisition before it ever reached the market.", name: "Family office", role: "Mumbai" },
+];
+
+const journal = [
+  { category: "Architecture", title: "Designing homes for enduring value", image: "/pexels-vishnu-murali-204762399-15068164.jpg.jpeg" },
+  { category: "Perspective", title: "The new language of quiet luxury", image: "/pexels-safwanck-10964081.jpg.jpeg" },
+  { category: "Intelligence", title: "India’s emerging private-residence markets", image: "/pexels-shox-31640057.jpg.jpeg" },
 ];
 
 function Arrow() { return <span aria-hidden="true">↗</span>; }
@@ -14,75 +36,92 @@ export default function Home() {
   const [menu, setMenu] = useState(false);
   const [mode, setMode] = useState("Buy");
   const [saved, setSaved] = useState<number[]>([]);
+  const [activeProperty, setActiveProperty] = useState(0);
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
   const cursor = useRef<HTMLDivElement>(null);
   const parallax = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const lenis = new Lenis({ duration: 1.35, smoothWheel: !reduceMotion, wheelMultiplier: .85, anchors: true });
+    const tick = (time: number) => lenis.raf(time * 1000);
+    lenis.on("scroll", ScrollTrigger.update);
+    gsap.ticker.add(tick);
+    gsap.ticker.lagSmoothing(0);
+
     const onMove = (e: MouseEvent) => {
-      if (cursor.current) cursor.current.style.transform = `translate3d(${e.clientX}px,${e.clientY}px,0)`;
+      if (!cursor.current) return;
+      gsap.to(cursor.current, { x: e.clientX, y: e.clientY, duration: .55, ease: "power3.out", overwrite: true });
     };
-    const reveals = document.querySelectorAll<HTMLElement>(".reveal");
-    reveals.forEach((el) => {
-      const section = el.closest("section, footer");
-      const siblings = section ? Array.from(section.querySelectorAll(".reveal")) : [];
-      const order = Math.min(4, Math.max(0, siblings.indexOf(el)));
-      el.style.setProperty("--motion-delay", `${order * 90}ms`);
-    });
-    const motionSections = document.querySelectorAll<HTMLElement>("main > section, main > footer");
-    motionSections.forEach((section, index) => {
-      section.classList.add("motion-section");
-      section.dataset.motionIndex = String(index);
+
+    const context = gsap.context(() => {
+      if (reduceMotion) {
+        gsap.set(".reveal", { opacity: 1, y: 0, filter: "none", clipPath: "inset(0 0 0% 0)" });
+        return;
+      }
+
+      gsap.utils.toArray<HTMLElement>(".reveal").forEach((element) => {
+        gsap.fromTo(element,
+          { opacity: 0, y: 55, filter: "blur(8px)", clipPath: "inset(0 0 10% 0)" },
+          { opacity: 1, y: 0, filter: "blur(0px)", clipPath: "inset(0 0 0% 0)", duration: 1.4, ease: "power4.out", scrollTrigger: { trigger: element, start: "top 86%", toggleActions: "play none none reverse", onEnter: () => element.classList.add("is-visible"), onEnterBack: () => element.classList.add("is-visible"), onLeaveBack: () => element.classList.remove("is-visible") } }
+        );
+
+        gsap.to(element, {
+          opacity: .18,
+          y: -34,
+          scale: .988,
+          filter: "blur(5px)",
+          ease: "none",
+          scrollTrigger: { trigger: element, start: "bottom 18%", end: "bottom top", scrub: .75 }
+        });
+      });
+
+      [
+        [".service-card", 70],
+        [".journal-card", 85],
+      ].forEach(([selector, stagger]) => {
+        const items = gsap.utils.toArray<HTMLElement>(selector as string);
+        if (!items.length) return;
+        gsap.from(items, {
+          y: 80,
+          opacity: 0,
+          scale: .965,
+          filter: "blur(10px)",
+          duration: 1.35,
+          stagger: Number(stagger) / 1000,
+          ease: "power4.out",
+          scrollTrigger: { trigger: items[0].parentElement, start: "top 82%", toggleActions: "play none none reverse" }
+        });
+      });
+
+      gsap.utils.toArray<HTMLElement>(".showcase-image, .journal-card>div, .consultation").forEach((frame) => {
+        gsap.fromTo(frame, { clipPath: "inset(7% 0 7% 0)", scale: .97 }, { clipPath: "inset(0% 0 0% 0)", scale: 1, duration: 1.65, ease: "power4.out", scrollTrigger: { trigger: frame, start: "top 88%", toggleActions: "play none none reverse" } });
+      });
+
+      gsap.fromTo(".testimonial-card", { rotateX: 5, transformPerspective: 1200, y: 70 }, { rotateX: 0, y: 0, duration: 1.6, ease: "power4.out", scrollTrigger: { trigger: ".testimonials", start: "top 70%", toggleActions: "play none none reverse" } });
+
+      gsap.utils.toArray<HTMLElement>(".property-image").forEach((image) => {
+        gsap.fromTo(image, { clipPath: "inset(12% 0 12% 0)", scale: .94 }, { clipPath: "inset(0% 0 0% 0)", scale: 1, ease: "none", scrollTrigger: { trigger: image, start: "top 92%", end: "top 35%", scrub: 1.2 } });
+      });
+
+      gsap.fromTo(".quote blockquote", { scale: .94, filter: "blur(9px)" }, { scale: 1, filter: "blur(0px)", ease: "none", scrollTrigger: { trigger: ".quote", start: "top 75%", end: "center center", scrub: 1.2 } });
+
+      if (parallax.current) {
+        gsap.timeline({ scrollTrigger: { trigger: parallax.current, start: "top top", end: "bottom bottom", scrub: 1.15 } })
+          .to(parallax.current, { "--p": 1, duration: .5, ease: "none" })
+          .to(parallax.current, { "--c": 1, duration: .3, ease: "none" })
+          .to(parallax.current, { "--n": 1, duration: .2, ease: "none" });
+      }
     });
 
-    const setMotionState = (section: HTMLElement, state: "before" | "active" | "after") => {
-      if (section.classList.contains(`motion-${state}`)) return;
-      section.classList.remove("motion-before", "motion-active", "motion-after");
-      section.classList.add(`motion-${state}`);
-      section.querySelectorAll<HTMLElement>(".reveal").forEach((element) => {
-        element.classList.toggle("is-visible", state === "active");
-        element.classList.toggle("is-past", state === "after");
-      });
-    };
-    const updateSectionMotion = () => {
-      const viewport = window.innerHeight;
-      motionSections.forEach((section) => {
-        const rect = section.getBoundingClientRect();
-        const visiblePixels = Math.max(0, Math.min(rect.bottom, viewport) - Math.max(rect.top, 0));
-        const visibleRatio = visiblePixels / Math.max(1, Math.min(rect.height, viewport));
-        const isActive = section.classList.contains("motion-active");
-        let state: "before" | "active" | "after";
-        if (rect.bottom <= 0) state = "after";
-        else if (rect.top >= viewport) state = "before";
-        else if (isActive && visibleRatio > .4) state = "active";
-        else if (!isActive && visibleRatio >= .6) state = "active";
-        else state = rect.top < 0 ? "after" : "before";
-        setMotionState(section, state);
-      });
-    };
-    let frame = 0;
-    const updateParallax = () => {
-      frame = 0;
-      updateSectionMotion();
-      const scene = parallax.current;
-      if (!scene) return;
-      const rect = scene.getBoundingClientRect();
-      const distance = Math.max(1, rect.height - window.innerHeight);
-      const progress = Math.min(1, Math.max(0, -rect.top / distance));
-      scene.style.setProperty("--p", progress.toFixed(4));
-
-    };
-    const onScroll = () => {
-      if (!frame) frame = window.requestAnimationFrame(updateParallax);
-    };
-    updateParallax();
     window.addEventListener("mousemove", onMove);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    ScrollTrigger.refresh();
     return () => {
       window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (frame) window.cancelAnimationFrame(frame);
+      context.revert();
+      gsap.ticker.remove(tick);
+      lenis.destroy();
     };
   }, []);
 
@@ -121,33 +160,39 @@ export default function Home() {
         }}
       >
         <div className="parallax-stage">
-          <img className="parallax-sky" src="/parallax-sky.png" alt="" aria-hidden="true" />
+          <img className="parallax-sky" src="/parallax-sky-bright.png" alt="" aria-hidden="true" />
           <div className="parallax-haze" />
-          <img className="parallax-cloud parallax-cloud-far" src="/parallax-cloud-far-alpha.png" alt="" aria-hidden="true" />
+          <img className="parallax-cloud parallax-cloud-far" src="/parallax-cloud-white-far.png" alt="" aria-hidden="true" />
           <div className="parallax-ghost" aria-hidden="true">ARIKA</div>
           <div className="parallax-copy">
             <p className="eyebrow">Private residences · India &amp; beyond</p>
             <h1><span>Built beyond</span><em>the expected.</em></h1>
-            <p>Rare addresses. Considered architecture.<br/>A legacy shaped around you.</p>
-            <a href="#legacy">Discover ARIKA <Arrow/></a>
           </div>
           <img className="parallax-house" src="/parallax-house.png" alt="Contemporary luxury residence represented by ARIKA REALTY" />
-          <img className="parallax-cloud parallax-cloud-near" src="/parallax-cloud-near-alpha.png" alt="" aria-hidden="true" />
+          <img className="parallax-cloud parallax-cloud-near" src="/parallax-cloud-white-near.png" alt="" aria-hidden="true" />
           <div className="parallax-vignette" />
+          <div className="parallax-statement">
+            <span>Rare addresses · Considered architecture</span>
+            <p>A legacy shaped around you.</p>
+          </div>
+          <a className="parallax-cta" href="#legacy"><span>Discover<br/>ARIKA</span><b aria-hidden="true">↗</b></a>
+          <div className="cloud-curtain-wash" aria-hidden="true" />
+          <img className="cloud-curtain cloud-curtain-side" src="/parallax-cloud-white-near.png" alt="" aria-hidden="true" />
+          <img className="cloud-curtain cloud-curtain-veil" src="/parallax-cloud-white-far.png" alt="" aria-hidden="true" />
+          <img className="cloud-curtain cloud-curtain-bank" src="/parallax-cloud-white-near.png" alt="" aria-hidden="true" />
+          <div className="hero hero-secondary parallax-next-preview" id="legacy">
+            <div className="hero-media" />
+            <div className="hero-shade" />
+            <div className="hero-copy">
+              <p className="eyebrow hero-eyebrow">Extraordinary homes · India &amp; beyond</p>
+              <h1><span>Space to live.</span><em>Room to become.</em></h1>
+              <p className="hero-sub">Exceptional homes, quietly discovered. Personal representation for people who expect more than a transaction.</p>
+            </div>
+            <a className="explore" href="#residences"><span>Explore<br/>residences</span><b>↓</b></a>
+            <div className="hero-index"><span>AR—01</span><span>18.5204° N</span></div>
+          </div>
           <div className="parallax-meta"><span>AR—00</span><span>Scroll to enter</span><i>↓</i></div>
         </div>
-      </section>
-
-      <section className="hero hero-secondary" id="legacy">
-        <div className="hero-media" />
-        <div className="hero-shade" />
-        <div className="hero-copy">
-          <p className="eyebrow hero-eyebrow">Extraordinary homes · India & beyond</p>
-          <h1><span>Space to live.</span><em>Room to become.</em></h1>
-          <p className="hero-sub">Exceptional homes, quietly discovered. Personal representation for people who expect more than a transaction.</p>
-        </div>
-        <a className="explore" href="#residences"><span>Explore<br/>residences</span><b>↓</b></a>
-        <div className="hero-index"><span>AR—01</span><span>18.5204° N</span></div>
       </section>
 
       <section className="intro" id="story">
@@ -171,41 +216,67 @@ export default function Home() {
       </section>
 
       <section className="featured" id="residences">
-        <div className="section-title reveal"><div><p className="eyebrow">Private collection · 2026</p><h2>Curated<br/><em>residences</em></h2></div><p>Architecture of consequence.<br/>Locations without compromise.</p></div>
-        <div className="property-grid">
-          {properties.map((p, i) => <article className="property reveal" key={p.name}>
-            <div className="property-image" style={{backgroundPosition:p.pos}}><span>0{i+1}</span><button aria-label={`Save ${p.name}`} className={saved.includes(i)?"saved":""} onClick={() => setSaved(v => v.includes(i)?v.filter(x=>x!==i):[...v,i])}>♡</button><a href="#contact" aria-label={`View ${p.name}`}>View residence <Arrow/></a></div>
-            <div className="property-info"><div><p>{p.place}</p><h3>{p.name}</h3><small>{p.meta}</small></div><strong>{p.price}</strong></div>
-          </article>)}
+        <div className="collection-heading reveal"><div><p className="eyebrow">Private collection · 2026</p><h2>Featured <em>residences</em></h2></div><a href="#contact">View all residences <Arrow/></a></div>
+        <article className="residence-showcase reveal" aria-live="polite">
+          <div className="showcase-image" key={properties[activeProperty].image} style={{backgroundImage:`url('${properties[activeProperty].image}')`, backgroundPosition:properties[activeProperty].pos}}>
+            <span className="showcase-number">0{activeProperty + 1}</span>
+            <button aria-label={`Save ${properties[activeProperty].name}`} className={saved.includes(activeProperty)?"saved":""} onClick={() => setSaved(v => v.includes(activeProperty)?v.filter(x=>x!==activeProperty):[...v,activeProperty])}>♡</button>
+          </div>
+          <div className="showcase-copy" key={properties[activeProperty].name}>
+            <p className="eyebrow">{properties[activeProperty].place}</p>
+            <h3>{properties[activeProperty].name}</h3>
+            <p className="showcase-description">{properties[activeProperty].description}</p>
+            <div className="showcase-facts"><span>{properties[activeProperty].meta}</span><strong>{properties[activeProperty].price}</strong></div>
+            <a className="pill-link" href="#contact">View residence <Arrow/></a>
+            <div className="showcase-nav"><span>{String(activeProperty + 1).padStart(2,"0")} / {String(properties.length).padStart(2,"0")}</span><i><b style={{width:`${((activeProperty + 1) / properties.length) * 100}%`}}/></i><button aria-label="Previous residence" onClick={() => setActiveProperty(v => (v - 1 + properties.length) % properties.length)}>←</button><button aria-label="Next residence" onClick={() => setActiveProperty(v => (v + 1) % properties.length)}>→</button></div>
+          </div>
+        </article>
+        <div className="residence-tabs reveal">
+          {properties.map((property, index) => <button className={index === activeProperty ? "active" : ""} onClick={() => setActiveProperty(index)} key={property.name}><span>0{index + 1}</span>{property.name}</button>)}
         </div>
-        <a className="text-link reveal" href="#contact">Explore the complete collection <Arrow/></a>
       </section>
 
-      <section className="services">
-        <p className="eyebrow reveal">What moves you</p>
-        {["Find","Sell","Invest"].map((x,i)=><a
-          href="#contact"
-          className="service reveal"
-          key={x}
-          onPointerMove={(event) => {
-            const bounds = event.currentTarget.getBoundingClientRect();
-            event.currentTarget.style.setProperty("--mx", `${event.clientX - bounds.left}px`);
-            event.currentTarget.style.setProperty("--my", `${event.clientY - bounds.top}px`);
-          }}
-        >
-          <small className="service-index">0{i+1}</small>
-          <span className="service-title">{x}</span>
-          <p>{i===0?"Discover a place that feels inevitable.":i===1?"Position your property with precision.":"Build a portfolio with quiet confidence."}</p>
-          <b aria-hidden="true">↗</b>
-        </a>)}
+      <section className="services" id="our-approach">
+        <div className="services-head reveal"><div><p className="eyebrow">Private realty, personally considered</p><h2>How we can<br/><em>move you.</em></h2></div><p>From first conversation to final detail, every engagement is shaped around one client, one ambition and one remarkable outcome.</p></div>
+        <div className="service-cards">
+          {advisoryServices.map((service,i)=><a href="#contact" className="service-card reveal" key={service.title}>
+            <img src={service.image} alt="" />
+            <span className="service-card-index">0{i+1}</span>
+            <div><h3>{service.title}</h3><p>{service.text}</p><b>Discover more <Arrow/></b></div>
+          </a>)}
+        </div>
       </section>
 
-      <section className="quote" id="journal"><p className="eyebrow reveal">Private advisory</p><blockquote className="reveal">“The finest service is felt<br/>in what you <em>never</em> have<br/>to ask for.”</blockquote><p className="quote-note reveal">Local intelligence. Global perspective.<br/>Absolute discretion.</p></section>
+      <section className="testimonials">
+        <div className="testimonial-intro reveal"><p className="eyebrow">Private advisory</p><h2>Service you feel<br/>in what you <em>never</em><br/>have to ask for.</h2><p>Local intelligence. Global perspective. Absolute discretion.</p></div>
+        <article className="testimonial-card reveal" aria-live="polite">
+          <span className="quote-mark">“</span>
+          <blockquote key={activeTestimonial}>{testimonials[activeTestimonial].quote}</blockquote>
+          <div className="testimonial-person"><i>{testimonials[activeTestimonial].name.charAt(0)}</i><p><strong>{testimonials[activeTestimonial].name}</strong><span>{testimonials[activeTestimonial].role}</span></p></div>
+          <div className="testimonial-nav"><span>{String(activeTestimonial + 1).padStart(2,"0")} / {String(testimonials.length).padStart(2,"0")}</span><button aria-label="Previous testimonial" onClick={() => setActiveTestimonial(v => (v - 1 + testimonials.length) % testimonials.length)}>←</button><button aria-label="Next testimonial" onClick={() => setActiveTestimonial(v => (v + 1) % testimonials.length)}>→</button></div>
+        </article>
+      </section>
+
+      <section className="journal" id="journal">
+        <div className="journal-head reveal"><div><p className="eyebrow">Journal · Perspectives</p><h2>Insights and <em>inspiration.</em></h2></div><a href="#contact">See all insights <Arrow/></a></div>
+        <div className="journal-grid">{journal.map((article,index)=><a className="journal-card reveal" href="#contact" key={article.title}><div><img src={article.image} alt=""/><span>0{index+1}</span></div><p>{article.category} · 6 min read</p><h3>{article.title}</h3><b>Read perspective <Arrow/></b></a>)}</div>
+      </section>
+
+      <section className="consultation reveal">
+        <img src="/pexels-omergulen-19366884.jpg.jpeg" alt="Contemporary residence at sunset"/>
+        <div className="consultation-shade"/>
+        <div className="consultation-copy"><p className="eyebrow">A private conversation</p><h2>Let’s create your<br/><em>next chapter.</em></h2></div>
+        <div className="consultation-action"><p>Tell us what you are looking for. We will bring clarity, discretion and the right possibilities.</p><a className="pill-link light" href="mailto:hello@arikarealty.com">Start a conversation <Arrow/></a></div>
+      </section>
 
       <footer id="contact">
         <div className="footer-top reveal"><p className="eyebrow">Your next chapter</p><h2>Let’s find<br/><em>what moves you.</em></h2><a href="mailto:hello@arikarealty.com">Start a conversation <Arrow/></a></div>
         <div className="footer-mid"><div><small>ENQUIRIES</small><a href="mailto:hello@arikarealty.com">hello@arikarealty.com</a><a href="tel:+919810001001">+91 98100 01001</a></div><div><small>VISIT</small><p>Mumbai · Bengaluru · Goa<br/>By private appointment</p></div><div><small>FOLLOW</small><a href="#">Instagram</a><a href="#">LinkedIn</a></div><form onSubmit={e=>e.preventDefault()}><small>PRIVATE NOTES</small><label><input type="email" aria-label="Email address" placeholder="Your email address"/><button aria-label="Subscribe">→</button></label></form></div>
-        <div className="footer-brand"><img src="/arika-logo-transparent.png" alt="ARIKA REALTY — Building Legacies" width="1280" height="853"/></div><div className="legal"><span>© 2026 ARIKA REALTY</span><span>Privacy · Terms · RERA</span><span>Made for remarkable living</span></div>
+        <div className="footer-brand" aria-label="ARIKA REALTY">
+          <span>ARIKA</span>
+          <div className="footer-emblem"><img src="/arika-logo-transparent.png" alt="ARIKA REALTY — Building Legacies" width="1280" height="853"/></div>
+          <span>REALTY</span>
+        </div><div className="legal"><span>© 2026 ARIKA REALTY</span><span>Privacy · Terms · RERA</span><span>Made for remarkable living</span></div>
       </footer>
     </main>
   );
