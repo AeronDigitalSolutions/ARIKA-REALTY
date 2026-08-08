@@ -313,3 +313,21 @@ footer{padding-bottom:42px}
 .consultation{transition:transform 1s cubic-bezier(.16,1,.3,1),box-shadow 1s cubic-bezier(.16,1,.3,1)}.consultation:hover{transform:translateY(-8px);box-shadow:0 38px 110px rgba(29,27,23,.19)}.consultation-copy,.consultation-action{transition:transform .95s cubic-bezier(.16,1,.3,1)}.consultation:hover .consultation-copy{transform:translateY(-8px)}.consultation:hover .consultation-action{transform:translateY(-5px)}
 @media(max-width:800px){.parallax-copy{left:20px;right:20px;top:22%;max-width:none}.parallax-copy h1{font-size:16vw;line-height:.9}.parallax-copy h1 em{margin-left:0}.parallax-house{width:140vw}.parallax-statement{top:62%;padding:13px 16px}.parallax-cta{width:90px;height:90px}.residence-showcase:hover,.service-card:hover,.testimonial-card:hover,.journal-card:hover,.consultation:hover{transform:none;box-shadow:none}}
 @media(prefers-reduced-motion:reduce){.residence-showcase,.service-card,.testimonial-card,.journal-card,.consultation{transition:none!important}.residence-showcase:hover,.service-card:hover,.testimonial-card:hover,.journal-card:hover,.consultation:hover{transform:none!important}}
+
+/* Permanent-frame residence morph: only media and values change. */
+.showcase-image{background:#111;isolation:isolate}
+.showcase-image:after{z-index:2;pointer-events:none}
+.showcase-media{position:absolute;z-index:0;inset:0;background-size:cover;opacity:0;transform:scale(1.018);filter:brightness(.42) saturate(.92);will-change:opacity,transform,filter;transition:opacity 1.05s cubic-bezier(.2,.72,.2,1),transform 1.35s cubic-bezier(.16,1,.3,1),filter 1.05s cubic-bezier(.2,.72,.2,1)}
+.showcase-media.active{opacity:1;transform:scale(1);filter:brightness(1) saturate(1)}
+.showcase-media.departing{opacity:0;transform:scale(.992);filter:brightness(.16) saturate(.7)}
+.showcase-exposure{position:absolute;z-index:1;inset:0;pointer-events:none;background:#050505;opacity:0}
+.showcase-exposure.active{animation:showcaseExposure 1.08s cubic-bezier(.4,0,.2,1) both}
+.showcase-number,.showcase-image>button{z-index:3}
+.showcase-copy{animation:none;contain:layout paint}
+.showcase-morph{will-change:transform,opacity,filter}
+.showcase-nav{position:relative;z-index:4}
+.showcase-nav>span{display:flex;align-items:center;gap:3px;min-width:42px}.showcase-nav>span b{font:inherit;display:inline-block;min-width:14px;font-variant-numeric:tabular-nums;transition:color .35s ease}.showcase-nav i{overflow:hidden}.showcase-nav i b{transform-origin:left;transition:width .82s cubic-bezier(.16,1,.3,1)}
+.showcase-nav button:disabled,.residence-tabs button:disabled{cursor:default;opacity:.72}
+.showcase-nav button:disabled:hover,.residence-tabs button:disabled:hover{transform:none}
+@keyframes showcaseExposure{0%{opacity:0}34%{opacity:.34}52%{opacity:.22}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.showcase-media{transition:none}.showcase-exposure.active{animation:none}.showcase-morph{transform:none!important;opacity:1!important;filter:none!important}}

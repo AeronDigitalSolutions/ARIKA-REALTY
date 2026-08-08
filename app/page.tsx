@@ -37,9 +37,45 @@ export default function Home() {
   const [mode, setMode] = useState("Buy");
   const [saved, setSaved] = useState<number[]>([]);
   const [activeProperty, setActiveProperty] = useState(0);
+  const [previousProperty, setPreviousProperty] = useState<number | null>(null);
+  const [propertyTransitioning, setPropertyTransitioning] = useState(false);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const cursor = useRef<HTMLDivElement>(null);
   const parallax = useRef<HTMLElement>(null);
+  const showcaseContent = useRef<HTMLDivElement>(null);
+  const propertyDirection = useRef(1);
+
+  const changeProperty = (next: number) => {
+    if (next === activeProperty || propertyTransitioning) return;
+    const direction = next > activeProperty || (activeProperty === properties.length - 1 && next === 0) ? 1 : -1;
+    propertyDirection.current = direction;
+    setPropertyTransitioning(true);
+    const changingContent = showcaseContent.current?.querySelectorAll(".showcase-morph");
+    gsap.to(changingContent || [], {
+      y: direction * 13,
+      opacity: .22,
+      filter: "blur(3px)",
+      duration: .28,
+      stagger: .012,
+      ease: "power2.in",
+      onComplete: () => {
+        setPreviousProperty(activeProperty);
+        setActiveProperty(next);
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (previousProperty === null || !propertyTransitioning) return;
+    const changingContent = showcaseContent.current?.querySelectorAll(".showcase-morph");
+    gsap.fromTo(changingContent || [],
+      { y: propertyDirection.current * -11, opacity: .22, filter: "blur(3px)" },
+      { y: 0, opacity: 1, filter: "blur(0px)", duration: .64, stagger: .022, ease: "power4.out", onComplete: () => {
+        setPropertyTransitioning(false);
+        window.setTimeout(() => setPreviousProperty(null), 850);
+      }}
+    );
+  }, [activeProperty, previousProperty, propertyTransitioning]);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -64,34 +100,16 @@ export default function Home() {
       gsap.utils.toArray<HTMLElement>(".reveal").forEach((element) => {
         gsap.fromTo(element,
           { opacity: 0, y: 55, filter: "blur(8px)", clipPath: "inset(0 0 10% 0)" },
-          { opacity: 1, y: 0, filter: "blur(0px)", clipPath: "inset(0 0 0% 0)", duration: 1.4, ease: "power4.out", scrollTrigger: { trigger: element, start: "top 86%", toggleActions: "play none none reverse", onEnter: () => element.classList.add("is-visible"), onEnterBack: () => element.classList.add("is-visible"), onLeaveBack: () => element.classList.remove("is-visible") } }
+          { opacity: 1, y: 0, filter: "blur(0px)", clipPath: "inset(0 0 0% 0)", duration: 1.4, ease: "power4.out", scrollTrigger: { trigger: element, start: "top 86%", toggleActions: "play none play none", onEnter: () => element.classList.add("is-visible"), onEnterBack: () => element.classList.add("is-visible") } }
         );
 
-        gsap.to(element, {
-          opacity: .18,
-          y: -34,
-          scale: .988,
-          filter: "blur(5px)",
-          ease: "none",
-          scrollTrigger: { trigger: element, start: "bottom 18%", end: "bottom top", scrub: .75 }
-        });
-      });
-
-      [
-        [".service-card", 70],
-        [".journal-card", 85],
-      ].forEach(([selector, stagger]) => {
-        const items = gsap.utils.toArray<HTMLElement>(selector as string);
-        if (!items.length) return;
-        gsap.from(items, {
-          y: 80,
-          opacity: 0,
-          scale: .965,
-          filter: "blur(10px)",
-          duration: 1.35,
-          stagger: Number(stagger) / 1000,
-          ease: "power4.out",
-          scrollTrigger: { trigger: items[0].parentElement, start: "top 82%", toggleActions: "play none none reverse" }
+        ScrollTrigger.create({
+          trigger: element,
+          start: "bottom top",
+          onEnterBack: () => {
+            element.classList.add("is-visible");
+            gsap.to(element, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", clipPath: "inset(0 0 0% 0)", duration: .72, ease: "power3.out", overwrite: true });
+          }
         });
       });
 
@@ -217,22 +235,29 @@ export default function Home() {
 
       <section className="featured" id="residences">
         <div className="collection-heading reveal"><div><p className="eyebrow">Private collection · 2026</p><h2>Featured <em>residences</em></h2></div><a href="#contact">View all residences <Arrow/></a></div>
-        <article className="residence-showcase reveal" aria-live="polite">
-          <div className="showcase-image" key={properties[activeProperty].image} style={{backgroundImage:`url('${properties[activeProperty].image}')`, backgroundPosition:properties[activeProperty].pos}}>
+        <article className="residence-showcase reveal" aria-live="polite" aria-busy={propertyTransitioning}>
+          <div className="showcase-image">
+            {properties.map((property, index) => <div
+              className={`showcase-media ${index === activeProperty ? "active" : ""} ${index === previousProperty ? "departing" : ""}`}
+              style={{backgroundImage:`url('${property.image}')`, backgroundPosition:property.pos}}
+              aria-hidden="true"
+              key={property.image}
+            />)}
+            <div className={`showcase-exposure ${propertyTransitioning ? "active" : ""}`} aria-hidden="true" />
             <span className="showcase-number">0{activeProperty + 1}</span>
             <button aria-label={`Save ${properties[activeProperty].name}`} className={saved.includes(activeProperty)?"saved":""} onClick={() => setSaved(v => v.includes(activeProperty)?v.filter(x=>x!==activeProperty):[...v,activeProperty])}>♡</button>
           </div>
-          <div className="showcase-copy" key={properties[activeProperty].name}>
-            <p className="eyebrow">{properties[activeProperty].place}</p>
-            <h3>{properties[activeProperty].name}</h3>
-            <p className="showcase-description">{properties[activeProperty].description}</p>
-            <div className="showcase-facts"><span>{properties[activeProperty].meta}</span><strong>{properties[activeProperty].price}</strong></div>
-            <a className="pill-link" href="#contact">View residence <Arrow/></a>
-            <div className="showcase-nav"><span>{String(activeProperty + 1).padStart(2,"0")} / {String(properties.length).padStart(2,"0")}</span><i><b style={{width:`${((activeProperty + 1) / properties.length) * 100}%`}}/></i><button aria-label="Previous residence" onClick={() => setActiveProperty(v => (v - 1 + properties.length) % properties.length)}>←</button><button aria-label="Next residence" onClick={() => setActiveProperty(v => (v + 1) % properties.length)}>→</button></div>
+          <div className="showcase-copy" ref={showcaseContent}>
+            <p className="eyebrow showcase-morph">{properties[activeProperty].place}</p>
+            <h3 className="showcase-morph">{properties[activeProperty].name}</h3>
+            <p className="showcase-description showcase-morph">{properties[activeProperty].description}</p>
+            <div className="showcase-facts showcase-morph"><span>{properties[activeProperty].meta}</span><strong>{properties[activeProperty].price}</strong></div>
+            <a className="pill-link showcase-morph" href="#contact">View residence <Arrow/></a>
+            <div className="showcase-nav"><span><b className="progress-current">{String(activeProperty + 1).padStart(2,"0")}</b> / {String(properties.length).padStart(2,"0")}</span><i><b style={{width:`${((activeProperty + 1) / properties.length) * 100}%`}}/></i><button disabled={propertyTransitioning} aria-label="Previous residence" onClick={() => changeProperty((activeProperty - 1 + properties.length) % properties.length)}>←</button><button disabled={propertyTransitioning} aria-label="Next residence" onClick={() => changeProperty((activeProperty + 1) % properties.length)}>→</button></div>
           </div>
         </article>
         <div className="residence-tabs reveal">
-          {properties.map((property, index) => <button className={index === activeProperty ? "active" : ""} onClick={() => setActiveProperty(index)} key={property.name}><span>0{index + 1}</span>{property.name}</button>)}
+          {properties.map((property, index) => <button disabled={propertyTransitioning} className={index === activeProperty ? "active" : ""} onClick={() => changeProperty(index)} key={property.name}><span>0{index + 1}</span>{property.name}</button>)}
         </div>
       </section>
 
