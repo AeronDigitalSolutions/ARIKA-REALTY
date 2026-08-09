@@ -12,7 +12,6 @@ export default function Home() {
   const [heroBgIndex, setHeroBgIndex] = useState(0);
   const [heroCycleVersion, setHeroCycleVersion] = useState(0);
   const [elixirDone, setElixirDone] = useState(false);
-  const villaParallaxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -117,33 +116,8 @@ export default function Home() {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-
-    const onMouseMove = (e: MouseEvent) => {
-      if (!villaParallaxRef.current) return;
-      const rect = villaParallaxRef.current.getBoundingClientRect();
-      if (rect.top <= 0 && rect.bottom >= window.innerHeight) {
-        const normX = (e.clientX / window.innerWidth - 0.5) * 2;
-        const normY = (e.clientY / window.innerHeight - 0.5) * 2;
-        villaParallaxRef.current.style.setProperty("--cam-rx", (normY * -2.5).toFixed(2));
-        villaParallaxRef.current.style.setProperty("--cam-ry", (normX * 2.5).toFixed(2));
-      }
-    };
-
-    if (villaParallaxRef.current) {
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: villaParallaxRef.current,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 1.2,
-        },
-      }).to(villaParallaxRef.current, { "--p": 1, duration: 1, ease: "none" });
-    }
-
-    window.addEventListener("mousemove", onMouseMove);
-
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduceMotion) return () => window.removeEventListener("mousemove", onMouseMove);
+    if (reduceMotion) return;
 
     const lenis = new Lenis({ duration: 1.18, smoothWheel: true, wheelMultiplier: .88, anchors: true });
     const lenisTick = (time: number) => lenis.raf(time * 1000);
@@ -291,36 +265,7 @@ export default function Home() {
         </button>
       </header>
 
-      {/* ----------------------------------------------------
-         0. LAYER-BY-LAYER 3D VILLA PARALLAX HERO SECTION
-      ---------------------------------------------------- */}
-      <section className="villa-parallax-hero" ref={villaParallaxRef}>
-        <div className="villa-parallax-stage">
-          {/* Layer 0: Sky Backdrop */}
-          <img className="villa-sky-layer" src="/parallax-sky-bright.png" alt="" aria-hidden="true" />
-          <div className="villa-sun-bloom" aria-hidden="true" />
-          
-          {/* Layer 2: 3D Brand Watermark */}
-          <div className="villa-brand-watermark" aria-hidden="true">ARIKA</div>
 
-          {/* Layer 3: Display Headline (Z:3, sits BEHIND house so title emerges from behind villa facade) */}
-          <div className="villa-headline-copy">
-            <p className="villa-eyebrow-badge">PRIVATE RESIDENCES &middot; INDIA &amp; BEYOND</p>
-            <h1><span>Built beyond</span><em>the expected.</em></h1>
-          </div>
-          
-          {/* Layer 5: Symmetrical Front-Facing Villa Cutout (Z:5) */}
-          <img className="villa-facade-cutout" src="/front-villa-cutout.png" alt="Symmetrical front view elevation of luxury modern architectural villa" />
-          
-          {/* Layer 6: Opaque Ground Clouds */}
-          <img className="villa-cloud-ground" src="/parallax-cloud-white-near.png" alt="" aria-hidden="true" />
-          
-          {/* Layer 10: Bold White Tagline */}
-          <div className="villa-tagline-statement">
-            <p className="villa-bold-white-text">A legacy shaped around you.</p>
-          </div>
-        </div>
-      </section>
 
       {/* ----------------------------------------------------
          2. WORLD-CLASS CINEMATIC ARCHITECTURAL HERO
