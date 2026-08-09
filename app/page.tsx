@@ -1,308 +1,467 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import Lenis from "lenis";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-const properties = [
-  { place: "Goa · India", name: "Casa Aurelia", meta: "5 beds · 7 baths · 11,200 sq ft", price: "₹18.5 Cr", image: "/pexels-john-zook-2388999-5223143.jpg.jpeg", pos: "center 42%", description: "A light-filled coastal residence shaped by courtyards, native planting and an uninterrupted relationship with the sea." },
-  { place: "Alibaug · India", name: "The Quiet House", meta: "4 beds · 5 baths · 8,400 sq ft", price: "₹12.8 Cr", image: "/pexels-volkerthimm-27307398.jpg.jpeg", pos: "center 48%", description: "A private retreat where monolithic stone, deep verandas and tropical gardens create a rare sense of stillness." },
-  { place: "Bengaluru · India", name: "Atelier 27", meta: "4 beds · 4 baths · 6,100 sq ft", price: "₹9.4 Cr", image: "/pexels-shox-34360413.jpg.jpeg", pos: "center 52%", description: "A contemporary city home balancing gallery-like volumes with warm, intimate spaces for everyday life." },
-];
-
-const advisoryServices = [
-  { title: "Find a residence", text: "Private access to homes selected around the way you want to live.", image: "/pexels-abhishek-mishra-277771722-17343501.jpg.jpeg" },
-  { title: "Sell with ARIKA", text: "Precise positioning, discreet introductions and a story worthy of the address.", image: "/pexels-aj33-449362239-28796447.jpg.jpeg" },
-  { title: "Private investment", text: "Clear intelligence for considered acquisitions and enduring value.", image: "/pexels-asim-34160274-7096209.jpg.jpeg" },
-  { title: "Bespoke advisory", text: "One trusted point of view across property, place and possibility.", image: "/pexels-omergulen-19366884.jpg.jpeg" },
-];
-
-const testimonials = [
-  { quote: "ARIKA understood that we were not simply buying a house. They helped us find the setting for our family’s next chapter.", name: "Private client", role: "Goa residence" },
-  { quote: "Every introduction was thoughtful, every detail anticipated. The entire experience felt calm, exacting and entirely personal.", name: "Ananya & Rohan M.", role: "Bengaluru" },
-  { quote: "Their discretion and market instinct gave us the confidence to make an exceptional acquisition before it ever reached the market.", name: "Family office", role: "Mumbai" },
-];
-
-const journal = [
-  { category: "Architecture", title: "Designing homes for enduring value", image: "/pexels-vishnu-murali-204762399-15068164.jpg.jpeg" },
-  { category: "Perspective", title: "The new language of quiet luxury", image: "/pexels-safwanck-10964081.jpg.jpeg" },
-  { category: "Intelligence", title: "India’s emerging private-residence markets", image: "/pexels-shox-31640057.jpg.jpeg" },
-];
-
-function Arrow() { return <span aria-hidden="true">↗</span>; }
+import React, { useState } from "react";
 
 export default function Home() {
-  const [menu, setMenu] = useState(false);
-  const [mode, setMode] = useState("Buy");
-  const [saved, setSaved] = useState<number[]>([]);
-  const [activeProperty, setActiveProperty] = useState(0);
-  const [previousProperty, setPreviousProperty] = useState<number | null>(null);
-  const [propertyTransitioning, setPropertyTransitioning] = useState(false);
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
-  const cursor = useRef<HTMLDivElement>(null);
-  const parallax = useRef<HTMLElement>(null);
-  const showcaseContent = useRef<HTMLDivElement>(null);
-  const propertyDirection = useRef(1);
+  const [savedProperties, setSavedProperties] = useState<Record<string, boolean>>({});
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [heroBgIndex, setHeroBgIndex] = useState(0);
 
-  const changeProperty = (next: number) => {
-    if (next === activeProperty || propertyTransitioning) return;
-    const direction = next > activeProperty || (activeProperty === properties.length - 1 && next === 0) ? 1 : -1;
-    propertyDirection.current = direction;
-    setPropertyTransitioning(true);
-    const changingContent = showcaseContent.current?.querySelectorAll(".showcase-morph");
-    gsap.to(changingContent || [], {
-      y: direction * 13,
-      opacity: .22,
-      filter: "blur(3px)",
-      duration: .28,
-      stagger: .012,
-      ease: "power2.in",
-      onComplete: () => {
-        setPreviousProperty(activeProperty);
-        setActiveProperty(next);
-      }
-    });
+  const heroImages = [
+    { name: "Westlake Estate", image: "/neighborhood-westlake.jpg" },
+    { name: "Austin Horizon", image: "/neighborhood-austin.jpg" },
+    { name: "Highland Modern", image: "/neighborhood-highland.jpg" },
+  ];
+
+  const toggleSave = (id: string) => {
+    setSavedProperties((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  useEffect(() => {
-    if (previousProperty === null || !propertyTransitioning) return;
-    const changingContent = showcaseContent.current?.querySelectorAll(".showcase-morph");
-    gsap.fromTo(changingContent || [],
-      { y: propertyDirection.current * -11, opacity: .22, filter: "blur(3px)" },
-      { y: 0, opacity: 1, filter: "blur(0px)", duration: .64, stagger: .022, ease: "power4.out", onComplete: () => {
-        setPropertyTransitioning(false);
-        window.setTimeout(() => setPreviousProperty(null), 850);
-      }}
-    );
-  }, [activeProperty, previousProperty, propertyTransitioning]);
+  const testimonials = [
+    {
+      id: "[01]",
+      quote: "The team made my first home buying experience incredibly smooth. They were patient, knowledgeable, and helped me find the perfect starter home in Downtown Austin.",
+      name: "Sarah Johnson",
+      role: "Tech Executive",
+      avatar: "/neighborhood-austin.jpg",
+    },
+    {
+      id: "[02]",
+      quote: "Unlike many other agents, ARIKA REALTY didn't ask us to sign an exclusive commitment before taking us on our first private tour. Truly world-class advisory.",
+      name: "Dianne Russell",
+      role: "Advanced Techniquishian Coach",
+      avatar: "/neighborhood-highland.jpg",
+    },
+    {
+      id: "[03]",
+      quote: "Their market analytics and data-driven guidance gave us complete confidence during our $8.9M acquisition in Westlake Hills. Unmatched attention to detail.",
+      name: "Marcus Vance",
+      role: "Private Equity Partner",
+      avatar: "/neighborhood-westlake.jpg",
+    },
+  ];
 
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const lenis = new Lenis({ duration: 1.35, smoothWheel: !reduceMotion, wheelMultiplier: .85, anchors: true });
-    const tick = (time: number) => lenis.raf(time * 1000);
-    lenis.on("scroll", ScrollTrigger.update);
-    gsap.ticker.add(tick);
-    gsap.ticker.lagSmoothing(0);
+  const neighborhoods = [
+    {
+      id: "downtown-austin",
+      name: "Downtown Austin",
+      specs: "3 beds · 2 baths · 1,650 sq ft",
+      address: "1234 Maple Street, Austin, TX 78701",
+      price: "$4,800,000",
+      image: "/neighborhood-austin.jpg",
+    },
+    {
+      id: "highland-park",
+      name: "Highland Park",
+      specs: "4 beds · 4 baths · 3,850 sq ft",
+      address: "7820 Crescent Way, Dallas, TX 75205",
+      price: "$6,250,000",
+      image: "/neighborhood-highland.jpg",
+    },
+    {
+      id: "westlake-hills",
+      name: "Westlake Hills",
+      specs: "5 beds · 6 baths · 5,200 sq ft",
+      address: "4100 Skyline Terrace, Austin, TX 78746",
+      price: "$8,900,000",
+      image: "/neighborhood-westlake.jpg",
+    },
+    {
+      id: "the-heights",
+      name: "The Heights",
+      specs: "4 beds · 5 baths · 4,100 sq ft",
+      address: "1902 Woodland Vista, Houston, TX 77008",
+      price: "$5,400,000",
+      image: "/neighborhood-heights.jpg",
+    },
+  ];
 
-    const onMove = (e: MouseEvent) => {
-      if (!cursor.current) return;
-      gsap.to(cursor.current, { x: e.clientX, y: e.clientY, duration: .55, ease: "power3.out", overwrite: true });
-    };
-
-    const context = gsap.context(() => {
-      if (reduceMotion) {
-        gsap.set(".reveal", { opacity: 1, y: 0, filter: "none", clipPath: "inset(0 0 0% 0)" });
-        return;
-      }
-
-      gsap.utils.toArray<HTMLElement>(".reveal").forEach((element) => {
-        gsap.fromTo(element,
-          { opacity: 0, y: 55, filter: "blur(8px)", clipPath: "inset(0 0 10% 0)" },
-          { opacity: 1, y: 0, filter: "blur(0px)", clipPath: "inset(0 0 0% 0)", duration: 1.4, ease: "power4.out", scrollTrigger: { trigger: element, start: "top 86%", toggleActions: "play none play none", onEnter: () => element.classList.add("is-visible"), onEnterBack: () => element.classList.add("is-visible") } }
-        );
-
-        ScrollTrigger.create({
-          trigger: element,
-          start: "bottom top",
-          onEnterBack: () => {
-            element.classList.add("is-visible");
-            gsap.to(element, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", clipPath: "inset(0 0 0% 0)", duration: .72, ease: "power3.out", overwrite: true });
-          }
-        });
-      });
-
-      gsap.utils.toArray<HTMLElement>(".showcase-image, .journal-card>div, .consultation").forEach((frame) => {
-        gsap.fromTo(frame, { clipPath: "inset(7% 0 7% 0)", scale: .97 }, { clipPath: "inset(0% 0 0% 0)", scale: 1, duration: 1.65, ease: "power4.out", scrollTrigger: { trigger: frame, start: "top 88%", toggleActions: "play none none reverse" } });
-      });
-
-      gsap.fromTo(".testimonial-card", { rotateX: 5, transformPerspective: 1200, y: 70 }, { rotateX: 0, y: 0, duration: 1.6, ease: "power4.out", scrollTrigger: { trigger: ".testimonials", start: "top 70%", toggleActions: "play none none reverse" } });
-
-      gsap.utils.toArray<HTMLElement>(".property-image").forEach((image) => {
-        gsap.fromTo(image, { clipPath: "inset(12% 0 12% 0)", scale: .94 }, { clipPath: "inset(0% 0 0% 0)", scale: 1, ease: "none", scrollTrigger: { trigger: image, start: "top 92%", end: "top 35%", scrub: 1.2 } });
-      });
-
-      gsap.fromTo(".quote blockquote", { scale: .94, filter: "blur(9px)" }, { scale: 1, filter: "blur(0px)", ease: "none", scrollTrigger: { trigger: ".quote", start: "top 75%", end: "center center", scrub: 1.2 } });
-
-      if (parallax.current) {
-        gsap.timeline({ scrollTrigger: { trigger: parallax.current, start: "top top", end: "bottom bottom", scrub: 1.15 } })
-          .to(parallax.current, { "--p": 1, duration: .5, ease: "none" })
-          .to(parallax.current, { "--c": 1, duration: .3, ease: "none" })
-          .to(parallax.current, { "--n": 1, duration: .2, ease: "none" });
-      }
-    });
-
-    window.addEventListener("mousemove", onMove);
-    ScrollTrigger.refresh();
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      context.revert();
-      gsap.ticker.remove(tick);
-      lenis.destroy();
-    };
-  }, []);
+  const insights = [
+    {
+      title: "5 Tips for First-Time Home Buyers in Today's Market",
+      meta: "By Jessica Park · March 15, 2025 · 5 min read",
+      image: "/neighborhood-heights.jpg",
+    },
+    {
+      title: "How Architectural Design Influences Long-Term Value",
+      meta: "By David Chen · March 10, 2025 · 7 min read",
+      image: "/neighborhood-westlake.jpg",
+    },
+    {
+      title: "Navigating Private Real Estate Transactions in 2026",
+      meta: "By Elena Rostova · March 2, 2025 · 4 min read",
+      image: "/neighborhood-highland.jpg",
+    },
+  ];
 
   return (
-    <main>
-      <div className="cursor" ref={cursor} />
-      <div className="grain" />
-      <header className="nav">
-        <a className="brand" href="#top" aria-label="ARIKA REALTY home">
-          <img className="brand-logo" src="/arika-logo-transparent.png" alt="ARIKA REALTY — Building Legacies" width="1280" height="853" />
-        </a>
-        <nav aria-label="Primary navigation">
-          <a href="#residences">Residences</a><a href="#story">Our story</a><a href="#journal">Journal</a>
+    <div className="main-app">
+      {/* ----------------------------------------------------
+         1. NAVBAR
+      ---------------------------------------------------- */}
+      <header className="navbar">
+        <div className="nav-brand">
+          <img src="/arika-logo-transparent.png" alt="ARIKA REALTY" className="nav-logo-img" />
+          <span>ARIKA REALTY</span>
+        </div>
+
+        <nav className="nav-links">
+          <a href="#residences">Residences</a>
+          <a href="#neighborhoods">Neighborhoods</a>
+          <a href="#market">Market Analysis</a>
+          <a href="#testimonials">Client Stories</a>
+          <a href="#insights">Insights</a>
         </nav>
-        <button className="menu-button" onClick={() => setMenu(!menu)} aria-expanded={menu} aria-label="Toggle menu"><i/><i/></button>
-        <a className="nav-cta" href="#contact">Private consultation <Arrow/></a>
+
+        <div className="nav-actions">
+          <button className="btn-secondary">Get prequalified</button>
+          <button className="btn-primary">
+            <span>Private consultation</span>
+            <span aria-hidden="true">↗</span>
+          </button>
+        </div>
+
+        <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle menu">
+          <span />
+          <span />
+          <span />
+        </button>
       </header>
 
-      <div className={`menu-panel ${menu ? "open" : ""}`}>
-        <div className="menu-head"><img src="/arika-logo-transparent.png" alt="ARIKA REALTY" width="1280" height="853"/><button onClick={() => setMenu(false)} aria-label="Close menu">Close ×</button></div>
-        {["Residences", "Our story", "Journal", "Contact"].map((x, i) => <a key={x} onClick={() => setMenu(false)} href={`#${x.toLowerCase().replace(" ", "-")}`}><small>0{i+1}</small>{x}</a>)}
+      {/* ----------------------------------------------------
+         2. WORLD-CLASS CINEMATIC ARCHITECTURAL HERO
+      ---------------------------------------------------- */}
+      <section className="worldclass-hero">
+        <img
+          src={heroImages[heroBgIndex].image}
+          alt="Luxury Architecture"
+          className="hero-bg-media"
+        />
+        <div className="hero-bg-overlay" />
+
+        {/* Hero Top Floating Row */}
+        <div className="hero-top-badge-row">
+          <span className="hero-gold-badge">
+            <span>✦</span> PRIVATE ADVISORY &middot; EST. 2012
+          </span>
+
+          <div className="hero-residence-tabs">
+            {heroImages.map((item, idx) => (
+              <button
+                key={item.name}
+                className={`residence-tab-btn ${idx === heroBgIndex ? "active" : ""}`}
+                onClick={() => setHeroBgIndex(idx)}
+              >
+                0{idx + 1} / {item.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Hero Center Display Content */}
+        <div className="hero-center-content">
+          <h1 className="hero-display-title">
+            Unrivaled Private Residences &amp; <em>Architectural Masterpieces</em>
+          </h1>
+          <p className="hero-sub-text">
+            Discrete acquisitions, private representation, and world-class architectural advisory across premier global destinations.
+          </p>
+
+          {/* Frosted Glass Floating Search Bar */}
+          <div className="hero-glass-search">
+            <div className="search-field">
+              <label>Location</label>
+              <input type="text" defaultValue="Austin, Texas &amp; Beyond" placeholder="City or Neighborhood" />
+            </div>
+
+            <div className="search-divider" />
+
+            <div className="search-field">
+              <label>Property Type</label>
+              <select defaultValue="villa">
+                <option value="villa">Private Residences &amp; Estates</option>
+                <option value="penthouse">Penthouses</option>
+                <option value="waterfront">Waterfront Properties</option>
+              </select>
+            </div>
+
+            <div className="search-divider" />
+
+            <div className="search-field">
+              <label>Price Range</label>
+              <select defaultValue="4m">
+                <option value="4m">$3M &ndash; $10M+</option>
+                <option value="10m">$10M &ndash; $25M</option>
+                <option value="25m">$25M+</option>
+              </select>
+            </div>
+
+            <button className="search-submit-btn">
+              <span>Explore Portfolio</span>
+              <span aria-hidden="true">↗</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Hero Bottom Key Metrics Row */}
+        <div className="hero-metrics-row">
+          <div className="hero-metric-item">
+            <h4>$1.2B+</h4>
+            <p>Exclusive Portfolio Transactions</p>
+          </div>
+          <div className="hero-metric-item">
+            <h4>100%</h4>
+            <p>Off-Market Private Representation</p>
+          </div>
+          <div className="hero-metric-item">
+            <h4>4.9 ★</h4>
+            <p>Client Satisfaction Rating</p>
+          </div>
+          <div className="hero-metric-item">
+            <h4>48 Hrs</h4>
+            <p>Average Inquiry Response</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Value Proposition Cards Section */}
+      <section className="section-wrapper" style={{ paddingTop: "20px", paddingBottom: "40px" }}>
+        <div className="value-props-grid">
+          <div className="value-card">
+            <p>Work with our dedicated advisory team who understand local market trends, private listings, and seamless closings.</p>
+            <button className="btn-card-action">Find an agent ↗</button>
+          </div>
+
+          <div className="value-card">
+            <p>Get prequalified with our trusted lending partners for competitive rates, customized terms, and expedited approvals.</p>
+            <button className="btn-card-action">Get prequalified ↗</button>
+          </div>
+
+          <div className="value-card">
+            <p>Comprehensive market reports, valuation insights, and data-driven trends to maximize your investment portfolio.</p>
+            <button className="btn-card-action">Learn more ↗</button>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-wrapper" id="neighborhoods">
+        <div className="section-header-flex">
+          <div>
+            <h2 className="section-title">Featured Neighborhoods</h2>
+            <p className="section-subtitle">Explore the most popular areas with current market trends</p>
+          </div>
+          <a href="#all" className="btn-secondary">View All Portfolio ↗</a>
+        </div>
+
+        <div className="neighborhoods-grid">
+          {neighborhoods.map((item) => (
+            <div className="neighborhood-card" key={item.id}>
+              <div className="neighborhood-image-box">
+                <img src={item.image} alt={item.name} />
+                <button
+                  className={`heart-btn ${savedProperties[item.id] ? "active" : ""}`}
+                  onClick={() => toggleSave(item.id)}
+                  title="Save property"
+                >
+                  {savedProperties[item.id] ? "♥" : "♡"}
+                </button>
+              </div>
+
+              <div className="neighborhood-meta-content">
+                <h3 className="neighborhood-name">{item.name}</h3>
+                <p className="neighborhood-specs">{item.specs}</p>
+                <p className="neighborhood-address">{item.address}</p>
+                <p className="neighborhood-price">{item.price}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="market-section" id="market">
+        <div className="market-inner">
+          <div className="market-info-side">
+            <h2 className="section-title">Comprehensive Market Performance Analysis</h2>
+            <p className="section-subtitle">
+              Real-time insights and data-driven trends from the local real estate market to help buyers, sellers, and investors make smarter decisions.
+            </p>
+
+            <div className="stats-quad-grid">
+              <div className="stat-box dark">
+                <span className="stat-number">18 Days</span>
+                <span className="stat-label">Average on Market</span>
+              </div>
+
+              <div className="stat-box light">
+                <span className="stat-number">96%</span>
+                <span className="stat-label">List to Sale Ratio</span>
+              </div>
+
+              <div className="stat-box light">
+                <span className="stat-number">15+</span>
+                <span className="stat-label">Homes Sold This Quarter</span>
+              </div>
+
+              <div className="stat-box light">
+                <span className="stat-number">$425K</span>
+                <span className="stat-label">Average Price / Sq Ft</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="market-image-side">
+            <img src="/neighborhood-westlake.jpg" alt="Luxury Architecture Night View" />
+          </div>
+        </div>
+      </section>
+
+      <section className="testimonials-section" id="testimonials">
+        <div className="section-header-flex">
+          <div>
+            <h2 className="section-title">What Our Happy Clients Say</h2>
+            <p className="section-subtitle">Real stories from real clients who found their dream homes with us</p>
+          </div>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button
+              className="btn-secondary"
+              style={{ width: "44px", height: "44px", borderRadius: "50%", padding: 0, display: "grid", placeItems: "center" }}
+              onClick={() => setCurrentTestimonial((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1))}
+            >
+              ←
+            </button>
+            <button
+              className="btn-secondary"
+              style={{ width: "44px", height: "44px", borderRadius: "50%", padding: 0, display: "grid", placeItems: "center" }}
+              onClick={() => setCurrentTestimonial((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1))}
+            >
+              →
+            </button>
+          </div>
+        </div>
+
+        <div className="testimonial-container">
+          <div className="testimonial-feature-card">
+            <span className="testimonial-quote-num">{testimonials[currentTestimonial].id}</span>
+            <p className="testimonial-quote-text">{testimonials[currentTestimonial].quote}</p>
+            <div className="testimonial-author-row">
+              <img src={testimonials[currentTestimonial].avatar} alt={testimonials[currentTestimonial].name} className="author-avatar" />
+              <div className="author-info">
+                <h4>{testimonials[currentTestimonial].name}</h4>
+                <p>{testimonials[currentTestimonial].role}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="testimonial-side-cards">
+            <div className="testimonial-mini-card">
+              <img src="/neighborhood-austin.jpg" alt="Client Avatar" className="author-avatar" />
+              <div className="author-info">
+                <h4 style={{ color: "var(--text-main)" }}>Dianne Russell</h4>
+                <p style={{ color: "var(--text-muted)" }}>Advanced Technique Coach</p>
+              </div>
+            </div>
+
+            <div className="testimonial-mini-card">
+              <img src="/neighborhood-highland.jpg" alt="Client Avatar" className="author-avatar" />
+              <div className="author-info">
+                <h4 style={{ color: "var(--text-main)" }}>Sarah Johnson</h4>
+                <p style={{ color: "var(--text-muted)" }}>Tech Executive · Austin TX</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-wrapper" id="insights">
+        <div className="section-header-flex">
+          <div>
+            <h2 className="section-title">Real Estate Insights</h2>
+            <p className="section-subtitle">Articles, guides, and strategic market advice from our research team</p>
+          </div>
+          <a href="#all-insights" className="btn-secondary">View All Articles ↗</a>
+        </div>
+
+        <div className="insights-grid">
+          {insights.map((article, idx) => (
+            <div className="insight-card" key={idx}>
+              <div className="insight-image-box">
+                <img src={article.image} alt={article.title} />
+              </div>
+              <div className="insight-body">
+                <span className="insight-meta">{article.meta}</span>
+                <h3 className="insight-title">{article.title}</h3>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="cta-banner">
+        <img src="/neighborhood-highland.jpg" alt="Ready to find your dream home" />
+        <div className="cta-overlay" />
+        <div className="cta-content">
+          <h2 className="cta-title">Ready to Find Your Dream Home?</h2>
+          <p className="cta-sub">
+            Join thousands of satisfied clients who have found their perfect home with our expert guidance, market analysis, and personalized service.
+          </p>
+          <div className="cta-buttons">
+            <button className="btn-white">Start Your Search</button>
+            <button className="btn-glass">Speak with an Agent</button>
+          </div>
+        </div>
       </div>
 
-      <section
-        className="parallax-hero"
-        id="top"
-        ref={parallax}
-        onPointerMove={(event) => {
-          const bounds = event.currentTarget.getBoundingClientRect();
-          event.currentTarget.style.setProperty("--px", ((event.clientX / bounds.width) - .5).toFixed(3));
-          event.currentTarget.style.setProperty("--py", ((event.clientY / window.innerHeight) - .5).toFixed(3));
-        }}
-        onPointerLeave={(event) => {
-          event.currentTarget.style.setProperty("--px", "0");
-          event.currentTarget.style.setProperty("--py", "0");
-        }}
-      >
-        <div className="parallax-stage">
-          <img className="parallax-sky" src="/parallax-sky-bright.png" alt="" aria-hidden="true" />
-          <div className="parallax-haze" />
-          <img className="parallax-cloud parallax-cloud-far" src="/parallax-cloud-white-far.png" alt="" aria-hidden="true" />
-          <div className="parallax-ghost" aria-hidden="true">ARIKA</div>
-          <div className="parallax-copy">
-            <p className="eyebrow">Private residences · India &amp; beyond</p>
-            <h1><span>Built beyond</span><em>the expected.</em></h1>
-          </div>
-          <img className="parallax-house" src="/parallax-house.png" alt="Contemporary luxury residence represented by ARIKA REALTY" />
-          <img className="parallax-cloud parallax-cloud-near" src="/parallax-cloud-white-near.png" alt="" aria-hidden="true" />
-          <div className="parallax-vignette" />
-          <div className="parallax-statement">
-            <span>Rare addresses · Considered architecture</span>
-            <p>A legacy shaped around you.</p>
-          </div>
-          <a className="parallax-cta" href="#legacy"><span>Discover<br/>ARIKA</span><b aria-hidden="true">↗</b></a>
-          <div className="cloud-curtain-wash" aria-hidden="true" />
-          <img className="cloud-curtain cloud-curtain-side" src="/parallax-cloud-white-near.png" alt="" aria-hidden="true" />
-          <img className="cloud-curtain cloud-curtain-veil" src="/parallax-cloud-white-far.png" alt="" aria-hidden="true" />
-          <img className="cloud-curtain cloud-curtain-bank" src="/parallax-cloud-white-near.png" alt="" aria-hidden="true" />
-          <div className="hero hero-secondary parallax-next-preview" id="legacy">
-            <div className="hero-media" />
-            <div className="hero-shade" />
-            <div className="hero-copy">
-              <p className="eyebrow hero-eyebrow">Extraordinary homes · India &amp; beyond</p>
-              <h1><span>Space to live.</span><em>Room to become.</em></h1>
-              <p className="hero-sub">Exceptional homes, quietly discovered. Personal representation for people who expect more than a transaction.</p>
+      <footer className="footer">
+        <div className="footer-inner">
+          <div className="footer-top-row">
+            <a href="mailto:contact@arikarealty.com" className="footer-email-link">
+              <span>contact@arikarealty.com</span>
+              <span>↗</span>
+            </a>
+
+            <div className="footer-nav-cols">
+              <div className="footer-col">
+                <h5>Join</h5>
+                <ul>
+                  <li><a href="#agent">Become an Agent</a></li>
+                  <li><a href="#referrals">Get Referrals</a></li>
+                  <li><a href="#careers">Careers</a></li>
+                </ul>
+              </div>
+
+              <div className="footer-col">
+                <h5>About</h5>
+                <ul>
+                  <li><a href="#why">Why Choose Us?</a></li>
+                  <li><a href="#community">Community Impact</a></li>
+                  <li><a href="#press">Press</a></li>
+                  <li><a href="#blog">Blog</a></li>
+                </ul>
+              </div>
+
+              <div className="footer-col">
+                <h5>Find Us</h5>
+                <ul>
+                  <li><a href="#contact">Contact Us</a></li>
+                  <li><a href="#help">Help Center</a></li>
+                </ul>
+              </div>
             </div>
-            <a className="explore" href="#residences"><span>Explore<br/>residences</span><b>↓</b></a>
-            <div className="hero-index"><span>AR—01</span><span>18.5204° N</span></div>
           </div>
-          <div className="parallax-meta"><span>AR—00</span><span>Scroll to enter</span><i>↓</i></div>
-        </div>
-      </section>
 
-      <section className="intro" id="story">
-        <div className="intro-top reveal"><p className="eyebrow">The ARIKA perspective</p><span>( Since 2012 )</span></div>
-        <p className="manifesto reveal">A home is not an address.<br/>It is the <em>architecture</em> of a life.</p>
-        <div className="intro-bottom reveal"><p>We represent a considered collection of remarkable homes and the people drawn to them. Every introduction is personal. Every detail, intentional.</p><a className="circle-link" href="#contact">Our approach <Arrow/></a></div>
-      </section>
+          <div className="footer-brand-title">ARIKA REALTY</div>
 
-      <section className="finder" aria-label="Property search" onPointerMove={(event) => {
-        const bounds = event.currentTarget.getBoundingClientRect();
-        event.currentTarget.style.setProperty("--fx", `${event.clientX - bounds.left}px`);
-        event.currentTarget.style.setProperty("--fy", `${event.clientY - bounds.top}px`);
-      }}>
-        <div className="finder-head reveal"><div><p className="eyebrow">Begin your search</p><h2>Where will life<br/><em>take you?</em></h2></div><div className={`mode-switch ${mode === "Rent" ? "is-rent" : ""}`}>{["Buy","Rent"].map(x => <button type="button" aria-pressed={mode===x} onClick={() => setMode(x)} className={mode===x?"active":""} key={x}>{x}</button>)}</div></div>
-        <form className="search-bar reveal" onSubmit={(e) => e.preventDefault()}>
-          <label><span>01 / Location</span><input aria-label="Location" placeholder="City, neighbourhood or landmark" /></label>
-          <label><span>02 / Property type</span><select aria-label="Property type"><option>All residences</option><option>Villa</option><option>Penthouse</option><option>Estate</option></select></label>
-          <label><span>03 / Price range</span><select aria-label="Price range"><option>Any price</option><option>₹5–10 Cr</option><option>₹10–20 Cr</option><option>₹20 Cr+</option></select></label>
-          <button className="search-submit"><span className="mode-copy" key={mode}>View {mode === "Buy" ? "properties" : "rentals"}</span> <Arrow/></button>
-        </form>
-      </section>
-
-      <section className="featured" id="residences">
-        <div className="collection-heading reveal"><div><p className="eyebrow">Private collection · 2026</p><h2>Featured <em>residences</em></h2></div><a href="#contact">View all residences <Arrow/></a></div>
-        <article className="residence-showcase reveal" aria-live="polite" aria-busy={propertyTransitioning}>
-          <div className="showcase-image">
-            {properties.map((property, index) => <div
-              className={`showcase-media ${index === activeProperty ? "active" : ""} ${index === previousProperty ? "departing" : ""}`}
-              style={{backgroundImage:`url('${property.image}')`, backgroundPosition:property.pos}}
-              aria-hidden="true"
-              key={property.image}
-            />)}
-            <div className={`showcase-exposure ${propertyTransitioning ? "active" : ""}`} aria-hidden="true" />
-            <span className="showcase-number">0{activeProperty + 1}</span>
-            <button aria-label={`Save ${properties[activeProperty].name}`} className={saved.includes(activeProperty)?"saved":""} onClick={() => setSaved(v => v.includes(activeProperty)?v.filter(x=>x!==activeProperty):[...v,activeProperty])}>♡</button>
+          <div className="footer-bottom-row">
+            <p>&copy; 2026 ARIKA REALTY LLC. All rights reserved.</p>
+            <div className="footer-legal-links">
+              <a href="#privacy">Privacy Policy</a>
+              <a href="#terms">Terms of Service</a>
+              <a href="#accessibility">Accessibility</a>
+            </div>
           </div>
-          <div className="showcase-copy" ref={showcaseContent}>
-            <p className="eyebrow showcase-morph">{properties[activeProperty].place}</p>
-            <h3 className="showcase-morph">{properties[activeProperty].name}</h3>
-            <p className="showcase-description showcase-morph">{properties[activeProperty].description}</p>
-            <div className="showcase-facts showcase-morph"><span>{properties[activeProperty].meta}</span><strong>{properties[activeProperty].price}</strong></div>
-            <a className="pill-link showcase-morph" href="#contact">View residence <Arrow/></a>
-            <div className="showcase-nav"><span><b className="progress-current">{String(activeProperty + 1).padStart(2,"0")}</b> / {String(properties.length).padStart(2,"0")}</span><i><b style={{width:`${((activeProperty + 1) / properties.length) * 100}%`}}/></i><button disabled={propertyTransitioning} aria-label="Previous residence" onClick={() => changeProperty((activeProperty - 1 + properties.length) % properties.length)}>←</button><button disabled={propertyTransitioning} aria-label="Next residence" onClick={() => changeProperty((activeProperty + 1) % properties.length)}>→</button></div>
-          </div>
-        </article>
-        <div className="residence-tabs reveal">
-          {properties.map((property, index) => <button disabled={propertyTransitioning} className={index === activeProperty ? "active" : ""} onClick={() => changeProperty(index)} key={property.name}><span>0{index + 1}</span>{property.name}</button>)}
         </div>
-      </section>
-
-      <section className="services" id="our-approach">
-        <div className="services-head reveal"><div><p className="eyebrow">Private realty, personally considered</p><h2>How we can<br/><em>move you.</em></h2></div><p>From first conversation to final detail, every engagement is shaped around one client, one ambition and one remarkable outcome.</p></div>
-        <div className="service-cards">
-          {advisoryServices.map((service,i)=><a href="#contact" className="service-card reveal" key={service.title}>
-            <img src={service.image} alt="" />
-            <span className="service-card-index">0{i+1}</span>
-            <div><h3>{service.title}</h3><p>{service.text}</p><b>Discover more <Arrow/></b></div>
-          </a>)}
-        </div>
-      </section>
-
-      <section className="testimonials">
-        <div className="testimonial-intro reveal"><p className="eyebrow">Private advisory</p><h2>Service you feel<br/>in what you <em>never</em><br/>have to ask for.</h2><p>Local intelligence. Global perspective. Absolute discretion.</p></div>
-        <article className="testimonial-card reveal" aria-live="polite">
-          <span className="quote-mark">“</span>
-          <blockquote key={activeTestimonial}>{testimonials[activeTestimonial].quote}</blockquote>
-          <div className="testimonial-person"><i>{testimonials[activeTestimonial].name.charAt(0)}</i><p><strong>{testimonials[activeTestimonial].name}</strong><span>{testimonials[activeTestimonial].role}</span></p></div>
-          <div className="testimonial-nav"><span>{String(activeTestimonial + 1).padStart(2,"0")} / {String(testimonials.length).padStart(2,"0")}</span><button aria-label="Previous testimonial" onClick={() => setActiveTestimonial(v => (v - 1 + testimonials.length) % testimonials.length)}>←</button><button aria-label="Next testimonial" onClick={() => setActiveTestimonial(v => (v + 1) % testimonials.length)}>→</button></div>
-        </article>
-      </section>
-
-      <section className="journal" id="journal">
-        <div className="journal-head reveal"><div><p className="eyebrow">Journal · Perspectives</p><h2>Insights and <em>inspiration.</em></h2></div><a href="#contact">See all insights <Arrow/></a></div>
-        <div className="journal-grid">{journal.map((article,index)=><a className="journal-card reveal" href="#contact" key={article.title}><div><img src={article.image} alt=""/><span>0{index+1}</span></div><p>{article.category} · 6 min read</p><h3>{article.title}</h3><b>Read perspective <Arrow/></b></a>)}</div>
-      </section>
-
-      <section className="consultation reveal">
-        <img src="/pexels-omergulen-19366884.jpg.jpeg" alt="Contemporary residence at sunset"/>
-        <div className="consultation-shade"/>
-        <div className="consultation-copy"><p className="eyebrow">A private conversation</p><h2>Let’s create your<br/><em>next chapter.</em></h2></div>
-        <div className="consultation-action"><p>Tell us what you are looking for. We will bring clarity, discretion and the right possibilities.</p><a className="pill-link light" href="mailto:hello@arikarealty.com">Start a conversation <Arrow/></a></div>
-      </section>
-
-      <footer id="contact">
-        <div className="footer-top reveal"><p className="eyebrow">Your next chapter</p><h2>Let’s find<br/><em>what moves you.</em></h2><a href="mailto:hello@arikarealty.com">Start a conversation <Arrow/></a></div>
-        <div className="footer-mid"><div><small>ENQUIRIES</small><a href="mailto:hello@arikarealty.com">hello@arikarealty.com</a><a href="tel:+919810001001">+91 98100 01001</a></div><div><small>VISIT</small><p>Mumbai · Bengaluru · Goa<br/>By private appointment</p></div><div><small>FOLLOW</small><a href="#">Instagram</a><a href="#">LinkedIn</a></div><form onSubmit={e=>e.preventDefault()}><small>PRIVATE NOTES</small><label><input type="email" aria-label="Email address" placeholder="Your email address"/><button aria-label="Subscribe">→</button></label></form></div>
-        <div className="footer-brand" aria-label="ARIKA REALTY">
-          <span>ARIKA</span>
-          <div className="footer-emblem"><img src="/arika-logo-transparent.png" alt="ARIKA REALTY — Building Legacies" width="1280" height="853"/></div>
-          <span>REALTY</span>
-        </div><div className="legal"><span>© 2026 ARIKA REALTY</span><span>Privacy · Terms · RERA</span><span>Made for remarkable living</span></div>
       </footer>
-    </main>
+    </div>
   );
 }
