@@ -12,7 +12,6 @@ export default function Home() {
   const [heroBgIndex, setHeroBgIndex] = useState(0);
   const [heroCycleVersion, setHeroCycleVersion] = useState(0);
   const [elixirDone, setElixirDone] = useState(false);
-  const heroSceneRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -117,27 +116,8 @@ export default function Home() {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-
-    const onMouseMove = (e: MouseEvent) => {
-      if (!heroSceneRef.current) return;
-      const rect = heroSceneRef.current.getBoundingClientRect();
-      if (rect.top <= 0 && rect.bottom >= window.innerHeight) {
-        const normX = (e.clientX / window.innerWidth - 0.5);
-        const normY = (e.clientY / window.innerHeight - 0.5);
-        
-        gsap.to(heroSceneRef.current, {
-          "--cam-rx": (normY * -3).toFixed(2),
-          "--cam-ry": (normX * 4).toFixed(2),
-          duration: 1.1,
-          ease: "power3.out",
-          overwrite: "auto",
-        });
-      }
-    };
-    window.addEventListener("mousemove", onMouseMove);
-
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduceMotion) return () => window.removeEventListener("mousemove", onMouseMove);
+    if (reduceMotion) return;
 
     const lenis = new Lenis({ duration: 1.18, smoothWheel: true, wheelMultiplier: .88, anchors: true });
     const lenisTick = (time: number) => lenis.raf(time * 1000);
@@ -146,32 +126,16 @@ export default function Home() {
     gsap.ticker.lagSmoothing(0);
 
     const context = gsap.context(() => {
-      // 2.5s Master Entrance Timeline Sequence
-      const entranceTL = gsap.timeline({ defaults: { ease: "power4.out" } });
-      entranceTL
+      const heroTimeline = gsap.timeline({ defaults: { ease: "power4.out" } });
+      heroTimeline
         .fromTo(".navbar", { y: -26, opacity: 0, filter: "blur(8px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.05 })
-        .fromTo(".hero-layer-sky", { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1.03, duration: 0.8, ease: "power2.out" }, 0)
-        .fromTo(".hero-layer-villa", { opacity: 0, scale: 1.08, y: 40, filter: "brightness(0.75)" }, { opacity: 1, scale: 1, y: 0, filter: "brightness(1.02)", duration: 0.95 }, 0.25)
-        .fromTo(".hero-layer-headline", { opacity: 0, y: 70, z: -120 }, { opacity: 1, y: 0, z: 80, duration: 0.9, ease: "expo.out" }, 0.65)
-        .fromTo(".concierge-subtext", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.65, ease: "power3.out" }, 1.25)
-        .fromTo(".concierge-search-bar", { opacity: 0, y: 20, scale: 0.98 }, { opacity: 1, y: 0, scale: 1, duration: 0.75 }, 1.5);
+        .fromTo(".hero-top-badge-row > *", { y: 24, opacity: 0, filter: "blur(7px)" }, { y: 0, opacity: 1, filter: "blur(0px)", stagger: .09, duration: 1 }, "<.16")
+        .fromTo(".hero-display-title", { y: 70, opacity: 0, filter: "blur(12px)", clipPath: "inset(0 0 24% 0)" }, { y: 0, opacity: 1, filter: "blur(0px)", clipPath: "inset(0 0 0% 0)", duration: 1.45 }, "<.08")
+        .fromTo(".hero-glass-search", { y: 44, opacity: 0, scale: .975, filter: "blur(9px)" }, { y: 0, opacity: 1, scale: 1, filter: "blur(0px)", duration: 1.15 }, "<.42")
+        .fromTo(".hero-metric-item", { y: 28, opacity: 0 }, { y: 0, opacity: 1, stagger: .075, duration: .9 }, "<.25");
 
-      // ScrollTrigger 3D Parallax Timeline
-      if (heroSceneRef.current) {
-        gsap.timeline({
-          scrollTrigger: {
-            trigger: heroSceneRef.current,
-            start: "top top",
-            end: "bottom top",
-            scrub: 1.2,
-          },
-        })
-          .to(".hero-layer-sky", { yPercent: -8, scale: 1, ease: "none" }, 0)
-          .to(".hero-layer-atmosphere", { yPercent: -15, ease: "none" }, 0)
-          .to(".hero-layer-villa", { yPercent: -28, scale: 0.98, ease: "none" }, 0)
-          .to(".hero-layer-headline", { yPercent: -40, opacity: 0.85, ease: "none" }, 0)
-          .to(".hero-concierge-panel", { yPercent: -50, opacity: 0.15, ease: "none" }, 0);
-      }
+      gsap.fromTo(".hero-bg-media", { scale: 1.035 }, { scale: 1.095, yPercent: 2.5, ease: "none", scrollTrigger: { trigger: ".worldclass-hero", start: "top top", end: "bottom top", scrub: 1 } });
+      gsap.to(".hero-center-content", { y: -42, opacity: .66, ease: "none", scrollTrigger: { trigger: ".worldclass-hero", start: "55% top", end: "bottom top", scrub: .8 } });
 
       const motionSections = [
         { section: ".value-props-grid", targets: ".value-card", stagger: .1 },
@@ -301,80 +265,108 @@ export default function Home() {
         </button>
       </header>
 
-      {/* ----------------------------------------------------
-         MASTER DEVELOPMENT 3D PARALLAX ARCHITECTURAL HERO
-      ---------------------------------------------------- */}
-      <section className="hero-scene" ref={heroSceneRef}>
-        {/* Layer 0: Twilight Sky Backdrop (Z: -900px) */}
-        <img className="hero-layer-sky" src="/parallax-sky.png" alt="" aria-hidden="true" />
-        
-        {/* Layer 0.5: Atmospheric Haze & Dusk Ambient Glow (Z: -500px) */}
-        <div className="hero-layer-atmosphere" aria-hidden="true" />
 
-        {/* Layer 2: Editorial Display Headline (Z: +80px, Positioned BEHIND Villa Roofline) */}
-        <div className="hero-layer-headline">
-          <h1 className="hero-headline-title">
-            WHERE ARCHITECTURE<br />
-            BECOMES <em>LEGACY.</em>
+
+      {/* ----------------------------------------------------
+         2. WORLD-CLASS CINEMATIC ARCHITECTURAL HERO
+      ---------------------------------------------------- */}
+      <section className="worldclass-hero">
+        <div className="hero-bg-stack" aria-live="polite">
+          {heroImages.map((item, index) => <img
+            src={item.image}
+            alt={index === heroBgIndex ? item.name : ""}
+            aria-hidden={index !== heroBgIndex}
+            className={`hero-bg-media ${index === heroBgIndex ? "active" : ""}`}
+            key={item.image}
+          />)}
+        </div>
+        <div className="hero-bg-overlay" />
+
+        {/* Hero Top Floating Row */}
+        <div className="hero-top-badge-row">
+          <span className="hero-gold-badge">
+            <span>✦</span> PRIVATE ADVISORY &middot; EST. 2012
+          </span>
+
+          <div className="hero-residence-tabs">
+            {heroImages.map((item, idx) => (
+              <button
+                key={item.name}
+                className={`residence-tab-btn ${idx === heroBgIndex ? "active" : ""}`}
+                onClick={() => {
+                  setHeroBgIndex(idx);
+                  setHeroCycleVersion((version) => version + 1);
+                }}
+              >
+                0{idx + 1} / {item.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Hero Center Display Content */}
+        <div className="hero-center-content">
+          <h1 className="hero-display-title">
+            Unrivaled Private Residences &amp; <em>Architectural Masterpieces</em>
           </h1>
         </div>
 
-        {/* Layer 1: Architectural Villa Facade (Z: 0px, Front Elevation Cutout) */}
-        <img
-          className="hero-layer-villa"
-          src="/front-villa-cutout.png"
-          alt="ARIKA REALTY — High-end contemporary architectural villa"
-        />
-
-        {/* Layer 2.5: Supporting Statement & Translucent Dark Concierge Search Panel */}
-        <div className="hero-concierge-panel">
-          <p className="concierge-subtext">
-            Curated residences, off-market acquisitions, and bespoke architectural advisory for those who expect clarity, privacy, and restraint.
-          </p>
-
-          <div className="concierge-search-bar">
+        {/* Frosted Glass Floating Search Bar */}
+        <div className="hero-glass-search">
             <div className="search-field">
               <label>Location</label>
-              <input type="text" defaultValue="Mumbai &middot; Goa &middot; Bengaluru" placeholder="Location or Estate" />
+              <input type="text" defaultValue="Austin, Texas &amp; Beyond" placeholder="City or Neighborhood" />
             </div>
 
             <div className="search-divider" />
 
             <div className="search-field">
               <label>Property Type</label>
-              <select defaultValue="residence">
-                <option value="residence">Private Residences &amp; Estates</option>
-                <option value="penthouse">Penthouses &amp; Sky Villas</option>
-                <option value="waterfront">Waterfront Sanctuaries</option>
+              <select defaultValue="villa">
+                <option value="villa">Private Residences &amp; Estates</option>
+                <option value="penthouse">Penthouses</option>
+                <option value="waterfront">Waterfront Properties</option>
               </select>
             </div>
 
             <div className="search-divider" />
 
             <div className="search-field">
-              <label>Acquisition Value</label>
-              <select defaultValue="10cr">
-                <option value="10cr">&thinsp;₹10Cr &ndash; ₹50Cr+</option>
-                <option value="50cr">&thinsp;₹50Cr &ndash; ₹150Cr</option>
-                <option value="150cr">&thinsp;₹150Cr+</option>
+              <label>Price Range</label>
+              <select defaultValue="4m">
+                <option value="4m">$3M &ndash; $10M+</option>
+                <option value="10m">$10M &ndash; $25M</option>
+                <option value="25m">$25M+</option>
               </select>
             </div>
 
-            <button className="btn-concierge-cta">
+            <button className="search-submit-btn">
               <span>Explore Portfolio</span>
-              <span className="arrow" aria-hidden="true">&rarr;</span>
+              <span aria-hidden="true">↗</span>
             </button>
-          </div>
         </div>
 
-        {/* Layer 3: Foreground Framing & Scroll Indicator (Z: +350px) */}
-        <div className="hero-layer-foreground" aria-hidden="true">
-          <div className="hero-scroll-indicator">
-            <span>SCROLL TO EXPLORE</span>
-            <span>&darr;</span>
-          </div>
-        </div>
       </section>
+
+      {/* Hero metrics sit outside the image so the architecture can breathe. */}
+      <div className="hero-metrics-row hero-metrics-exterior">
+          <div className="hero-metric-item">
+            <h4>$1.2B+</h4>
+            <p>Exclusive Portfolio Transactions</p>
+          </div>
+          <div className="hero-metric-item">
+            <h4>100%</h4>
+            <p>Off-Market Private Representation</p>
+          </div>
+          <div className="hero-metric-item">
+            <h4>4.9 ★</h4>
+            <p>Client Satisfaction Rating</p>
+          </div>
+          <div className="hero-metric-item">
+            <h4>48 Hrs</h4>
+            <p>Average Inquiry Response</p>
+          </div>
+      </div>
 
       {/* Value Proposition Cards Section */}
       <section className="section-wrapper" style={{ paddingTop: "20px", paddingBottom: "40px" }}>
