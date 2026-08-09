@@ -1,12 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import Lenis from "lenis";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export default function Home() {
   const [savedProperties, setSavedProperties] = useState<Record<string, boolean>>({});
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [heroBgIndex, setHeroBgIndex] = useState(0);
+  const [heroCycleVersion, setHeroCycleVersion] = useState(0);
 
   const heroImages = [
     { name: "Westlake Estate", image: "/neighborhood-westlake.jpg" },
@@ -95,6 +99,110 @@ export default function Home() {
     },
   ];
 
+  useEffect(() => {
+    const heroCycle = window.setInterval(() => {
+      setHeroBgIndex((current) => (current + 1) % heroImages.length);
+    }, 3500);
+    return () => window.clearInterval(heroCycle);
+  }, [heroCycleVersion]);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
+
+    const lenis = new Lenis({ duration: 1.18, smoothWheel: true, wheelMultiplier: .88, anchors: true });
+    const lenisTick = (time: number) => lenis.raf(time * 1000);
+    lenis.on("scroll", ScrollTrigger.update);
+    gsap.ticker.add(lenisTick);
+    gsap.ticker.lagSmoothing(0);
+
+    const context = gsap.context(() => {
+      const heroTimeline = gsap.timeline({ defaults: { ease: "power4.out" } });
+      heroTimeline
+        .fromTo(".navbar", { y: -26, opacity: 0, filter: "blur(8px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.05 })
+        .fromTo(".hero-top-badge-row > *", { y: 24, opacity: 0, filter: "blur(7px)" }, { y: 0, opacity: 1, filter: "blur(0px)", stagger: .09, duration: 1 }, "<.16")
+        .fromTo(".hero-display-title", { y: 70, opacity: 0, filter: "blur(12px)", clipPath: "inset(0 0 24% 0)" }, { y: 0, opacity: 1, filter: "blur(0px)", clipPath: "inset(0 0 0% 0)", duration: 1.45 }, "<.08")
+        .fromTo(".hero-glass-search", { y: 44, opacity: 0, scale: .975, filter: "blur(9px)" }, { y: 0, opacity: 1, scale: 1, filter: "blur(0px)", duration: 1.15 }, "<.42")
+        .fromTo(".hero-metric-item", { y: 28, opacity: 0 }, { y: 0, opacity: 1, stagger: .075, duration: .9 }, "<.25");
+
+      gsap.fromTo(".hero-bg-media", { scale: 1.035 }, { scale: 1.095, yPercent: 2.5, ease: "none", scrollTrigger: { trigger: ".worldclass-hero", start: "top top", end: "bottom top", scrub: 1 } });
+      gsap.to(".hero-center-content", { y: -42, opacity: .66, ease: "none", scrollTrigger: { trigger: ".worldclass-hero", start: "55% top", end: "bottom top", scrub: .8 } });
+
+      const motionSections = [
+        { section: ".value-props-grid", targets: ".value-card", stagger: .1 },
+        { section: "#market", targets: ".market-info-side > *, .stat-box, .market-image-side", stagger: .07 },
+        { section: "#testimonials", targets: ".section-header-flex > *, .testimonial-feature-card, .testimonial-mini-card", stagger: .075 },
+        { section: "#insights", targets: ".section-header-flex > *, .insight-card", stagger: .085 },
+        { section: ".cta-banner", targets: ".cta-content > *", stagger: .09 },
+        { section: ".footer", targets: ".footer-email-link, .footer-col, .footer-brand-title, .footer-bottom-row", stagger: .07 },
+      ];
+
+      motionSections.forEach(({ section, targets, stagger }) => {
+        const sectionElement = document.querySelector<HTMLElement>(section);
+        if (!sectionElement) return;
+        const elements = sectionElement.querySelectorAll<HTMLElement>(targets);
+        gsap.fromTo(elements,
+          { y: 58, opacity: 0, scale: .985, filter: "blur(9px)", clipPath: "inset(0 0 10% 0)" },
+          { y: 0, opacity: 1, scale: 1, filter: "blur(0px)", clipPath: "inset(0 0 0% 0)", duration: 1.25, stagger, ease: "power4.out", scrollTrigger: { trigger: sectionElement, start: "top 82%", once: true } }
+        );
+
+        gsap.fromTo(sectionElement,
+          { y: 0, opacity: 1 },
+          { y: -16, opacity: .84, ease: "none", scrollTrigger: { trigger: sectionElement, start: "bottom 9%", end: "bottom top", scrub: .65 } }
+        );
+      });
+
+      const neighborhoodsSection = document.querySelector<HTMLElement>("#neighborhoods");
+      if (neighborhoodsSection) {
+        gsap.fromTo(neighborhoodsSection.querySelectorAll<HTMLElement>(".section-header-flex > *"),
+          { y: 44, opacity: 0, filter: "blur(8px)" },
+          { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.15, stagger: .08, ease: "power4.out", scrollTrigger: { trigger: neighborhoodsSection, start: "top 84%", once: true } }
+        );
+
+        const neighborhoodCards = neighborhoodsSection.querySelectorAll<HTMLElement>(".neighborhood-card");
+        const neighborhoodsGrid = neighborhoodsSection.querySelector<HTMLElement>(".neighborhoods-grid");
+        gsap.fromTo(neighborhoodCards,
+          {
+            x: (index) => index % 2 === 0 ? -150 : 150,
+            opacity: 0,
+            filter: "blur(10px)",
+          },
+          {
+            x: 0,
+            opacity: 1,
+            filter: "blur(0px)",
+            duration: 1.45,
+            stagger: .14,
+            ease: "power4.out",
+            scrollTrigger: {
+              trigger: neighborhoodsGrid ?? neighborhoodsSection,
+              start: "top 50%",
+              end: "bottom 8%",
+              toggleActions: "play reverse play reverse",
+            },
+          }
+        );
+      }
+
+      gsap.utils.toArray<HTMLElement>(".neighborhood-image-box, .market-image-side, .insight-image-box").forEach((frame) => {
+        gsap.fromTo(frame,
+          { clipPath: "inset(8% 0 8% 0)", scale: .97 },
+          { clipPath: "inset(0% 0 0% 0)", scale: 1, duration: 1.45, ease: "power4.out", scrollTrigger: { trigger: frame, start: "top 88%", once: true } }
+        );
+      });
+
+      gsap.fromTo(".cta-banner img", { scale: 1.08 }, { scale: 1.015, ease: "none", scrollTrigger: { trigger: ".cta-banner", start: "top bottom", end: "bottom top", scrub: 1.1 } });
+    });
+
+    ScrollTrigger.refresh();
+    return () => {
+      context.revert();
+      gsap.ticker.remove(lenisTick);
+      lenis.destroy();
+    };
+  }, []);
+
   return (
     <div className="main-app">
       {/* ----------------------------------------------------
@@ -102,11 +210,17 @@ export default function Home() {
       ---------------------------------------------------- */}
       <header className="navbar">
         <div className="nav-brand">
-          <img src="/arika-logo-transparent.png" alt="ARIKA REALTY" className="nav-logo-img" />
-          <span>ARIKA REALTY</span>
+          <img src="/arika-logo-lockup.png" alt="ARIKA REALTY — Building Legacies" className="nav-logo-img" />
         </div>
 
         <nav className="nav-links">
+          <div className="home-dropdown">
+            <button className="home-dropdown-trigger">Home <span>⌄</span></button>
+            <div className="home-dropdown-panel">
+              <a href="/" className="active"><span>01</span>Homepage 1</a>
+              <a href="/home-2"><span>02</span>Homepage 2</a>
+            </div>
+          </div>
           <a href="#residences">Residences</a>
           <a href="#neighborhoods">Neighborhoods</a>
           <a href="#market">Market Analysis</a>
@@ -133,11 +247,15 @@ export default function Home() {
          2. WORLD-CLASS CINEMATIC ARCHITECTURAL HERO
       ---------------------------------------------------- */}
       <section className="worldclass-hero">
-        <img
-          src={heroImages[heroBgIndex].image}
-          alt="Luxury Architecture"
-          className="hero-bg-media"
-        />
+        <div className="hero-bg-stack" aria-live="polite">
+          {heroImages.map((item, index) => <img
+            src={item.image}
+            alt={index === heroBgIndex ? item.name : ""}
+            aria-hidden={index !== heroBgIndex}
+            className={`hero-bg-media ${index === heroBgIndex ? "active" : ""}`}
+            key={item.image}
+          />)}
+        </div>
         <div className="hero-bg-overlay" />
 
         {/* Hero Top Floating Row */}
@@ -151,7 +269,10 @@ export default function Home() {
               <button
                 key={item.name}
                 className={`residence-tab-btn ${idx === heroBgIndex ? "active" : ""}`}
-                onClick={() => setHeroBgIndex(idx)}
+                onClick={() => {
+                  setHeroBgIndex(idx);
+                  setHeroCycleVersion((version) => version + 1);
+                }}
               >
                 0{idx + 1} / {item.name}
               </button>
@@ -164,12 +285,10 @@ export default function Home() {
           <h1 className="hero-display-title">
             Unrivaled Private Residences &amp; <em>Architectural Masterpieces</em>
           </h1>
-          <p className="hero-sub-text">
-            Discrete acquisitions, private representation, and world-class architectural advisory across premier global destinations.
-          </p>
+        </div>
 
-          {/* Frosted Glass Floating Search Bar */}
-          <div className="hero-glass-search">
+        {/* Frosted Glass Floating Search Bar */}
+        <div className="hero-glass-search">
             <div className="search-field">
               <label>Location</label>
               <input type="text" defaultValue="Austin, Texas &amp; Beyond" placeholder="City or Neighborhood" />
@@ -201,11 +320,12 @@ export default function Home() {
               <span>Explore Portfolio</span>
               <span aria-hidden="true">↗</span>
             </button>
-          </div>
         </div>
 
-        {/* Hero Bottom Key Metrics Row */}
-        <div className="hero-metrics-row">
+      </section>
+
+      {/* Hero metrics sit outside the image so the architecture can breathe. */}
+      <div className="hero-metrics-row hero-metrics-exterior">
           <div className="hero-metric-item">
             <h4>$1.2B+</h4>
             <p>Exclusive Portfolio Transactions</p>
@@ -222,25 +342,24 @@ export default function Home() {
             <h4>48 Hrs</h4>
             <p>Average Inquiry Response</p>
           </div>
-        </div>
-      </section>
+      </div>
 
       {/* Value Proposition Cards Section */}
       <section className="section-wrapper" style={{ paddingTop: "20px", paddingBottom: "40px" }}>
         <div className="value-props-grid">
           <div className="value-card">
             <p>Work with our dedicated advisory team who understand local market trends, private listings, and seamless closings.</p>
-            <button className="btn-card-action">Find an agent ↗</button>
+            <button className="btn-card-action"><span>Find an agent</span><span className="btn-card-arrow" aria-hidden="true">↗</span></button>
           </div>
 
           <div className="value-card">
             <p>Get prequalified with our trusted lending partners for competitive rates, customized terms, and expedited approvals.</p>
-            <button className="btn-card-action">Get prequalified ↗</button>
+            <button className="btn-card-action"><span>Get prequalified</span><span className="btn-card-arrow" aria-hidden="true">↗</span></button>
           </div>
 
           <div className="value-card">
             <p>Comprehensive market reports, valuation insights, and data-driven trends to maximize your investment portfolio.</p>
-            <button className="btn-card-action">Learn more ↗</button>
+            <button className="btn-card-action"><span>Learn more</span><span className="btn-card-arrow" aria-hidden="true">↗</span></button>
           </div>
         </div>
       </section>
@@ -450,7 +569,9 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="footer-brand-title">ARIKA REALTY</div>
+          <div className="footer-brand-title">
+            <img src="/arika-logo-lockup.png" alt="ARIKA REALTY — Building Legacies" className="footer-logo-img" />
+          </div>
 
           <div className="footer-bottom-row">
             <p>&copy; 2026 ARIKA REALTY LLC. All rights reserved.</p>
