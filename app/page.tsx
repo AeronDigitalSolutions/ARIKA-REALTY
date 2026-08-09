@@ -169,7 +169,7 @@ export default function Home() {
           .to(".hero-layer-sky", { yPercent: -8, scale: 1, ease: "none" }, 0)
           .to(".hero-layer-atmosphere", { yPercent: -15, ease: "none" }, 0)
           .to(".hero-layer-villa", { yPercent: -28, scale: 0.98, ease: "none" }, 0)
-          .to(".hero-layer-headline", { yPercent: -40, opacity: 0.25, ease: "none" }, 0)
+          .to(".hero-layer-headline", { yPercent: -40, opacity: 0.85, ease: "none" }, 0)
           .to(".hero-concierge-panel", { yPercent: -50, opacity: 0.15, ease: "none" }, 0);
       }
 
