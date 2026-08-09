@@ -11,6 +11,14 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [heroBgIndex, setHeroBgIndex] = useState(0);
   const [heroCycleVersion, setHeroCycleVersion] = useState(0);
+  const [elixirDone, setElixirDone] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setElixirDone(true);
+    }, 2200);
+    return () => clearTimeout(timer);
+  }, []);
 
   const heroImages = [
     { name: "Westlake Estate", image: "/pexels-john-zook-2388999-5223143.jpg.jpeg" },
@@ -206,11 +214,25 @@ export default function Home() {
   return (
     <div className="main-app">
       {/* ----------------------------------------------------
+         ELIXIR ENTRANCE PRELOADER
+      ---------------------------------------------------- */}
+      <div className={`elixir-entrance ${elixirDone ? "done" : ""}`}>
+        <div className="elixir-portal-glow" />
+        <div className="elixir-content">
+          <img src="/arika-logo-white-transparent.png" alt="ARIKA REALTY" className="elixir-logo" />
+          <p className="elixir-text">ARIKA REALTY &middot; PRIVATE ADVISORY</p>
+          <div className="elixir-progress-bar">
+            <div className="elixir-progress-fill" />
+          </div>
+        </div>
+      </div>
+
+      {/* ----------------------------------------------------
          1. NAVBAR
       ---------------------------------------------------- */}
       <header className="navbar">
         <div className="nav-brand">
-          <img src="/arika-logo-lockup.png" alt="ARIKA REALTY — Building Legacies" className="nav-logo-img" />
+          <img src="/arika-logo-transparent.png" alt="ARIKA REALTY — Building Legacies" className="nav-logo-img" />
         </div>
 
         <nav className="nav-links">
@@ -570,7 +592,7 @@ export default function Home() {
           </div>
 
           <div className="footer-brand-title">
-            <img src="/arika-logo-lockup.png" alt="ARIKA REALTY — Building Legacies" className="footer-logo-img" />
+            <img src="/arika-logo-white-transparent.png" alt="ARIKA REALTY — Building Legacies" className="footer-logo-img" />
           </div>
 
           <div className="footer-bottom-row">
