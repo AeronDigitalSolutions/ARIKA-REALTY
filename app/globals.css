@@ -49,6 +49,194 @@ button {
 }
 
 /* ----------------------------------------------------
+   LAYER-BY-LAYER 3D VILLA PARALLAX HERO SECTION
+---------------------------------------------------- */
+.villa-parallax-hero {
+  --p: 0;
+  --cam-rx: 0;
+  --cam-ry: 0;
+  position: relative;
+  height: 220svh;
+  background: linear-gradient(180deg, #3A8BD4 0%, #7CBDF0 55%, #DDF0FB 100%);
+  color: #FFFFFF;
+  isolation: isolate;
+}
+
+.villa-parallax-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 680px;
+  overflow: hidden;
+  perspective: 1600px;
+  transform-style: preserve-3d;
+  transform: rotateX(calc(var(--cam-rx) * 1deg)) rotateY(calc(var(--cam-ry) * 1deg));
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.villa-sky-layer {
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  top: 50%;
+  width: 135%;
+  height: 135%;
+  object-fit: cover;
+  transform: translate3d(-50%, -50%, 0) scale(1.05);
+  filter: saturate(1.25) brightness(1.08) contrast(1.04);
+  animation: villaSkyIn 1.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.villa-sun-bloom {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 35% 20%, rgba(255, 240, 190, 0.45), transparent 45%);
+}
+
+.villa-brand-watermark {
+  position: absolute;
+  z-index: 2;
+  top: 18%;
+  left: 50%;
+  transform: translate3d(-50%, calc(var(--p) * -64px), 0);
+  font: 700 clamp(140px, 22vw, 400px)/0.75 var(--font-display);
+  letter-spacing: calc(-0.06em + var(--p) * 0.15em);
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.35);
+  opacity: calc(0.45 - var(--p) * 0.25);
+  white-space: nowrap;
+  animation: villaGhostIn 1.8s 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.villa-headline-copy {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: 13vh;
+  transform: translate3d(-50%, calc(var(--p) * -125px), 80px);
+  width: min(94vw, 1100px);
+  text-align: center;
+  color: #FFFFFF;
+  animation: villaHeadlineIn 1.8s 1.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.villa-eyebrow-badge {
+  margin: 0 auto 18px;
+  text-align: center;
+  width: max-content;
+  padding: 6px 22px;
+  background: rgba(255, 255, 255, 0.9);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.6);
+  border-radius: 30px;
+  font-size: clamp(9px, 1vw, 12px);
+  letter-spacing: 0.28em;
+  color: #172430;
+  font-weight: 700;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.villa-headline-copy h1 {
+  margin: 0 auto;
+  width: 100%;
+  font: 500 clamp(52px, 6.5vw, 116px)/0.88 var(--font-display);
+  letter-spacing: -0.035em;
+  text-align: center;
+  color: #FFFFFF !important;
+  text-shadow: 0 4px 35px rgba(15, 28, 45, 0.65), 0 2px 10px rgba(0, 0, 0, 0.5) !important;
+}
+
+.villa-headline-copy h1 em {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-style: italic;
+  margin-left: 16px;
+  color: #F5E6C8 !important;
+}
+
+.villa-facade-cutout {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  bottom: 0;
+  width: min(86vw, 1360px);
+  height: auto;
+  filter: brightness(1.04) saturate(1.1) contrast(1.04) drop-shadow(0 20px 45px rgba(0,0,0,0.25)) !important;
+  transform-origin: center bottom;
+  transform: translate3d(-50%, calc(var(--p) * -110px), 140px) scale(calc(1 + var(--p) * 0.05));
+  animation: villaFacadeIn 2.0s 1.0s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.villa-cloud-ground {
+  position: absolute;
+  z-index: 6;
+  left: 0;
+  width: 100%;
+  height: 32vh;
+  max-height: 280px;
+  bottom: -20px;
+  object-fit: cover;
+  object-position: center bottom;
+  opacity: 1 !important;
+  filter: brightness(1.08) !important;
+  transform: translate3d(0, calc(var(--p) * -120px), 180px);
+  animation: villaCloudIn 1.8s 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.villa-tagline-statement {
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  bottom: 65px;
+  transform: translate3d(-50%, 0, 0);
+  text-align: center;
+  width: max-content;
+  max-width: 90vw;
+  animation: villaTaglineIn 1.5s 2.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.villa-bold-white-text {
+  margin: 0;
+  font: 700 clamp(36px, 4.8vw, 76px)/1.1 var(--font-display) !important;
+  color: #FFFFFF !important;
+  text-shadow: 0 4px 35px rgba(0, 0, 0, 0.9), 0 2px 12px rgba(0, 0, 0, 0.95) !important;
+  letter-spacing: -0.02em !important;
+}
+
+@keyframes villaSkyIn {
+  from { opacity: 0; transform: translate3d(-50%, -50%, 0) scale(1.15); }
+  to { opacity: 1; transform: translate3d(-50%, -50%, 0) scale(1.05); }
+}
+
+@keyframes villaFacadeIn {
+  from { opacity: 0; transform: translate3d(-50%, 150px, 140px) scale(0.92); }
+  to { opacity: 1; transform: translate3d(-50%, 0, 140px) scale(1); }
+}
+
+@keyframes villaCloudIn {
+  from { opacity: 0; transform: translate3d(0, 100px, 180px); }
+  to { opacity: 1; transform: translate3d(0, 0, 180px); }
+}
+
+@keyframes villaGhostIn {
+  from { opacity: 0; letter-spacing: 0.02em; }
+  to { opacity: 0.45; letter-spacing: -0.06em; }
+}
+
+@keyframes villaHeadlineIn {
+  from { opacity: 0; transform: translate3d(-50%, 80px, 80px); }
+  to { opacity: 1; transform: translate3d(-50%, 0, 80px); }
+}
+
+@keyframes villaTaglineIn {
+  from { opacity: 0; transform: translate3d(-50%, 40px, 0); }
+  to { opacity: 1; transform: translate3d(-50%, 0, 0); }
+}
+
+/* ----------------------------------------------------
    WORLD-CLASS CINEMATIC ARCHITECTURAL HERO
 ---------------------------------------------------- */
 .worldclass-hero {
