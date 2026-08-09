@@ -13,9 +13,9 @@ export default function Home() {
   const [heroCycleVersion, setHeroCycleVersion] = useState(0);
 
   const heroImages = [
-    { name: "Westlake Estate", image: "/neighborhood-westlake.jpg" },
-    { name: "Austin Horizon", image: "/neighborhood-austin.jpg" },
-    { name: "Highland Modern", image: "/neighborhood-highland.jpg" },
+    { name: "Westlake Estate", image: "/pexels-john-zook-2388999-5223143.jpg.jpeg" },
+    { name: "Austin Horizon", image: "/pexels-omergulen-19366884.jpg.jpeg" },
+    { name: "Highland Modern", image: "/pexels-volkerthimm-27307398.jpg.jpeg" },
   ];
 
   const toggleSave = (id: string) => {
@@ -28,21 +28,21 @@ export default function Home() {
       quote: "The team made my first home buying experience incredibly smooth. They were patient, knowledgeable, and helped me find the perfect starter home in Downtown Austin.",
       name: "Sarah Johnson",
       role: "Tech Executive",
-      avatar: "/neighborhood-austin.jpg",
+      avatar: "/pexels-abhishek-mishra-277771722-17343501.jpg.jpeg",
     },
     {
       id: "[02]",
       quote: "Unlike many other agents, ARIKA REALTY didn't ask us to sign an exclusive commitment before taking us on our first private tour. Truly world-class advisory.",
       name: "Dianne Russell",
       role: "Advanced Techniquishian Coach",
-      avatar: "/neighborhood-highland.jpg",
+      avatar: "/pexels-vishnu-murali-204762399-15068164.jpg.jpeg",
     },
     {
       id: "[03]",
       quote: "Their market analytics and data-driven guidance gave us complete confidence during our $8.9M acquisition in Westlake Hills. Unmatched attention to detail.",
       name: "Marcus Vance",
       role: "Private Equity Partner",
-      avatar: "/neighborhood-westlake.jpg",
+      avatar: "/pexels-omergulen-19366884.jpg.jpeg",
     },
   ];
 
@@ -53,7 +53,7 @@ export default function Home() {
       specs: "3 beds · 2 baths · 1,650 sq ft",
       address: "1234 Maple Street, Austin, TX 78701",
       price: "$4,800,000",
-      image: "/neighborhood-austin.jpg",
+      image: "/pexels-john-zook-2388999-5223143.jpg.jpeg",
     },
     {
       id: "highland-park",
@@ -61,7 +61,7 @@ export default function Home() {
       specs: "4 beds · 4 baths · 3,850 sq ft",
       address: "7820 Crescent Way, Dallas, TX 75205",
       price: "$6,250,000",
-      image: "/neighborhood-highland.jpg",
+      image: "/pexels-shox-31640057.jpg.jpeg",
     },
     {
       id: "westlake-hills",
@@ -69,7 +69,7 @@ export default function Home() {
       specs: "5 beds · 6 baths · 5,200 sq ft",
       address: "4100 Skyline Terrace, Austin, TX 78746",
       price: "$8,900,000",
-      image: "/neighborhood-westlake.jpg",
+      image: "/pexels-volkerthimm-27307398.jpg.jpeg",
     },
     {
       id: "the-heights",
@@ -77,7 +77,7 @@ export default function Home() {
       specs: "4 beds · 5 baths · 4,100 sq ft",
       address: "1902 Woodland Vista, Houston, TX 77008",
       price: "$5,400,000",
-      image: "/neighborhood-heights.jpg",
+      image: "/pexels-shox-34360413.jpg.jpeg",
     },
   ];
 
@@ -85,17 +85,17 @@ export default function Home() {
     {
       title: "5 Tips for First-Time Home Buyers in Today's Market",
       meta: "By Jessica Park · March 15, 2025 · 5 min read",
-      image: "/neighborhood-heights.jpg",
+      image: "/pexels-vishnu-murali-204762399-15068164.jpg.jpeg",
     },
     {
       title: "How Architectural Design Influences Long-Term Value",
       meta: "By David Chen · March 10, 2025 · 7 min read",
-      image: "/neighborhood-westlake.jpg",
+      image: "/pexels-aj33-449362239-28796447.jpg.jpeg",
     },
     {
       title: "Navigating Private Real Estate Transactions in 2026",
       meta: "By Elena Rostova · March 2, 2025 · 4 min read",
-      image: "/neighborhood-highland.jpg",
+      image: "/pexels-asim-34160274-7096209.jpg.jpeg",
     },
   ];
 
@@ -430,7 +430,7 @@ export default function Home() {
           </div>
 
           <div className="market-image-side">
-            <img src="/neighborhood-westlake.jpg" alt="Luxury Architecture Night View" />
+            <img src="/pexels-safwanck-10964081.jpg.jpeg" alt="Contemporary residential architecture" />
           </div>
         </div>
       </section>
@@ -474,7 +474,7 @@ export default function Home() {
 
           <div className="testimonial-side-cards">
             <div className="testimonial-mini-card">
-              <img src="/neighborhood-austin.jpg" alt="Client Avatar" className="author-avatar" />
+              <img src="/pexels-abhishek-mishra-277771722-17343501.jpg.jpeg" alt="Client Avatar" className="author-avatar" />
               <div className="author-info">
                 <h4 style={{ color: "var(--text-main)" }}>Dianne Russell</h4>
                 <p style={{ color: "var(--text-muted)" }}>Advanced Technique Coach</p>
@@ -482,7 +482,7 @@ export default function Home() {
             </div>
 
             <div className="testimonial-mini-card">
-              <img src="/neighborhood-highland.jpg" alt="Client Avatar" className="author-avatar" />
+              <img src="/pexels-vishnu-murali-204762399-15068164.jpg.jpeg" alt="Client Avatar" className="author-avatar" />
               <div className="author-info">
                 <h4 style={{ color: "var(--text-main)" }}>Sarah Johnson</h4>
                 <p style={{ color: "var(--text-muted)" }}>Tech Executive · Austin TX</p>
@@ -517,7 +517,7 @@ export default function Home() {
       </section>
 
       <div className="cta-banner">
-        <img src="/neighborhood-highland.jpg" alt="Ready to find your dream home" />
+        <img src="/pexels-omergulen-19366884.jpg.jpeg" alt="Ready to find your dream home" />
         <div className="cta-overlay" />
         <div className="cta-content">
           <h2 className="cta-title">Ready to Find Your Dream Home?</h2>
