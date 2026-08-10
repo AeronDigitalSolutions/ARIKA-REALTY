@@ -47,13 +47,13 @@ export default function HomeThree() {
 
     <section className="parallax-hero h3-parallax-hero" ref={parallax}>
       <div className="parallax-stage">
-        <img className="parallax-sky" src="/parallax-sky-bright.png" alt="" aria-hidden="true" />
+        <img className="parallax-sky" src="/parallax-sky.png" alt="" aria-hidden="true" />
         <div className="parallax-atmosphere" />
-        <img className="parallax-cloud parallax-cloud-far" src="/parallax-cloud-white-far.png" alt="" aria-hidden="true" />
+        <img className="parallax-cloud parallax-cloud-far" src="/parallax-cloud-far-alpha.png" alt="" aria-hidden="true" />
         <div className="parallax-ghost" aria-hidden="true">ARIKA</div>
         <div className="parallax-copy"><p className="eyebrow">Private residences · India &amp; beyond</p><h1><span>Built beyond</span><em>the expected.</em></h1></div>
         <img className="parallax-house" src="/parallax-house.png" alt="Contemporary luxury residence represented by ARIKA Realty" />
-        <img className="parallax-cloud parallax-cloud-near" src="/parallax-cloud-white-near.png" alt="" aria-hidden="true" />
+        <img className="parallax-cloud parallax-cloud-near" src="/parallax-cloud-near-alpha.png" alt="" aria-hidden="true" />
         <div className="parallax-vignette" />
         <div className="parallax-statement"><span>Rare addresses · Considered architecture</span><p className="statement-bold-white">A legacy shaped around you.</p></div>
         <a className="parallax-cta" href="#story"><span>Discover<br/>ARIKA</span><b>↗</b></a>

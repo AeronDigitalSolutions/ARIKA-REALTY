@@ -19,14 +19,17 @@
 }
 
 /* Homepage 3 historical PNG parallax composition. */
-.home-three .h3-parallax-hero{--p:0;height:225svh;background:linear-gradient(180deg,#4fa1e3 0%,#91cbf4 55%,#e2f1fb 100%)}
-.home-three .h3-parallax-hero .parallax-stage{background:linear-gradient(180deg,#4fa1e3 0%,#91cbf4 55%,#e2f1fb 100%)}
+.home-three .h3-parallax-hero{--p:0;height:225svh;background:linear-gradient(180deg,#34241f 0%,#6f4d3a 52%,#c58e5a 100%)}
+.home-three .h3-parallax-hero .parallax-stage{background:linear-gradient(180deg,#34241f 0%,#6f4d3a 52%,#c58e5a 100%)}
+.home-three .h3-parallax-hero .parallax-sky{filter:brightness(.62) saturate(.78) sepia(.28)!important}
+.home-three .h3-parallax-hero .parallax-atmosphere{background:radial-gradient(circle at 23% 25%,rgba(234,178,112,.22),transparent 40%),linear-gradient(180deg,rgba(32,20,16,.24),rgba(74,45,30,.15) 52%,rgba(25,18,15,.3))}
 .home-three .h3-parallax-hero .parallax-copy{top:13vh;color:#fff;text-shadow:0 4px 35px rgba(15,28,45,.55)}
 .home-three .h3-parallax-hero .parallax-copy h1{color:#fff!important;text-shadow:0 4px 35px rgba(15,28,45,.65)!important}
 .home-three .h3-parallax-hero .parallax-copy .eyebrow{color:#172430;background:rgba(255,255,255,.9)}
 .home-three .h3-parallax-hero .parallax-ghost{-webkit-text-stroke:1px rgba(255,255,255,.35)}
 .home-three .h3-parallax-hero .parallax-house{width:min(86vw,1360px);bottom:0}
-.home-three .h3-parallax-hero .parallax-cloud-near{display:block;height:32vh;bottom:-20px;opacity:1!important}
+.home-three .h3-parallax-hero .parallax-cloud-far{opacity:calc(.72 - var(--p) * .28);filter:brightness(.72) saturate(.8)!important}
+.home-three .h3-parallax-hero .parallax-cloud-near{display:block;height:38vh;bottom:-25px;opacity:1!important;filter:brightness(.72) saturate(.82) sepia(.12)!important}
 .home-three .h3-parallax-hero .parallax-statement{top:auto;bottom:65px;max-width:90vw}
 .home-three .h3-parallax-hero .parallax-meta{color:rgba(255,255,255,.95)}
 @media(max-width:800px){.home-three .h3-parallax-hero{height:190svh}.home-three .h3-parallax-hero .parallax-house{width:140vw}.home-three .h3-parallax-hero .parallax-copy{top:19%}}
