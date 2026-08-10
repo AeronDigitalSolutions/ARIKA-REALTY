@@ -27,11 +27,10 @@ export default function HomeTwo() {
     const ctx = gsap.context(() => {
       gsap.timeline({ defaults: { ease: "power4.out" } })
         .from(".z-nav", { y: -30, opacity: 0, duration: .9 })
-        .from(".z-wordmark", { y: 70, opacity: 0, letterSpacing: ".12em", duration: 1.25 }, "<.15")
-        .from(".z-house", { y: 120, scale: 1.1, opacity: 0, duration: 1.45 }, "<.15")
-        .from(".z-hero-detail > *", { y: 20, opacity: 0, stagger: .08, duration: .8 }, "<.45");
-      gsap.to(".z-wordmark", { yPercent: -20, ease: "none", scrollTrigger: { trigger: ".z-hero", start: "top top", end: "bottom top", scrub: 1 } });
-      gsap.to(".z-house", { yPercent: 13, scale: 1.05, ease: "none", scrollTrigger: { trigger: ".z-hero", start: "top top", end: "bottom top", scrub: 1 } });
+        .fromTo(".z-house-shell", { yPercent: 12, opacity: 0, clipPath: "inset(100% 0 0 0)" }, { yPercent: 0, opacity: 1, clipPath: "inset(0% 0 0 0)", duration: 1.65, ease: "expo.inOut" }, "<.05")
+        .fromTo(".z-wordmark", { yPercent: 115, opacity: 0, letterSpacing: ".04em" }, { yPercent: 0, opacity: 1, letterSpacing: "-.075em", duration: 1.4, ease: "expo.out" }, "-=.2")
+        .from(".z-hero-detail > *", { y: 20, opacity: 0, stagger: .08, duration: .8 }, "<.35");
+      gsap.fromTo(".z-house", { yPercent: 0 }, { yPercent: 2.5, ease: "none", scrollTrigger: { trigger: ".z-hero", start: "top top", end: "bottom top", scrub: 1.4, invalidateOnRefresh: true } });
       gsap.utils.toArray<HTMLElement>(".z-reveal").forEach((el) => gsap.from(el, { y: 65, opacity: 0, filter: "blur(8px)", duration: 1.1, ease: "power4.out", scrollTrigger: { trigger: el, start: "top 84%", toggleActions: "play none none reverse" } }));
       gsap.utils.toArray<HTMLElement>(".z-service-row").forEach((el) => gsap.from(el, { xPercent: -9, opacity: 0, duration: 1, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 88%", toggleActions: "play none none reverse" } }));
       gsap.to(".z-collage-card", { y: (i) => -40 - i * 18, rotate: (i) => (i - 1) * 2, ease: "none", scrollTrigger: { trigger: ".z-discover", start: "top bottom", end: "bottom top", scrub: 1 } });
@@ -41,7 +40,7 @@ export default function HomeTwo() {
 
   return <main className="z-page">
     <header className="z-nav">
-      <a className="z-brand" href="/home-2" aria-label="Arika home"><img src="/arika-logo-lockup.png" alt="Arika Realty" /></a>
+      <a className="z-brand" href="/home-2" aria-label="Arika Realty home"><img src="/arika-emblem.png" alt="" /><span>ARIKA <b>REALTY</b></span></a>
       <nav className={menu ? "open" : ""}>
         <div className="z-home-menu">
           <button aria-haspopup="true">Home <span>＋</span></button>
@@ -56,7 +55,7 @@ export default function HomeTwo() {
     <section className="z-hero">
       <div className="z-sun" />
       <div className="z-wordmark" aria-hidden="true">ARIKA</div>
-      <img className="z-house" src="/parallax-house.png" alt="Contemporary private residence at dusk" />
+      <div className="z-house-shell"><img className="z-house" src="/parallax-house-cropped.png" alt="Contemporary private residence at dusk" /></div>
       <div className="z-hero-detail z-hero-left"><span>Private realty</span><p>India · 18.5204° N<br/>73.8567° E</p></div>
       <div className="z-hero-detail z-hero-right"><span>Curated living</span><p>Rare homes for<br/>remarkable lives.</p></div>
       <a className="z-scroll" href="#about"><span>↓</span> Scroll to discover</a>
@@ -90,6 +89,6 @@ export default function HomeTwo() {
     </section>
 
     <section className="z-contact" id="contact"><p className="z-label">A private conversation</p><h2 className="z-reveal">A remarkable home<br/>begins with <em>hello.</em></h2><a href="mailto:hello@arikarealty.com">hello@arikarealty.com <span>↗</span></a></section>
-    <footer className="z-footer"><img src="/arika-logo-lockup.png" alt="Arika Realty"/><p>Private residences · India and beyond</p><div><a href="/">Homepage 1</a><a href="/home-2">Homepage 2</a><span>© 2026</span></div></footer>
+    <footer className="z-footer"><a className="z-footer-brand" href="/home-2" aria-label="Arika Realty home"><img src="/arika-emblem.png" alt=""/><span>ARIKA <b>REALTY</b></span></a><p>Private residences · India and beyond</p><div><a href="/">Homepage 1</a><a href="/home-2">Homepage 2</a><span>© 2026</span></div></footer>
   </main>;
 }
