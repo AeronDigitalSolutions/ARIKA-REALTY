@@ -334,7 +334,14 @@ export default function Home() {
           <img src="/arika-logo-transparent.png" alt="ARIKA REALTY — Building Legacies" className="nav-logo-img" />
         </div>
 
-        <nav className="nav-links">
+        <nav className={`nav-links ${mobileMenuOpen ? "mobile-open" : ""}`}>
+          <div className="home-dropdown">
+            <button className="home-dropdown-trigger" aria-haspopup="true">Home <span>⌄</span></button>
+            <div className="home-dropdown-panel">
+              <a href="/" className="active"><span>01</span>Homepage 1</a>
+              <a href="/home-2"><span>02</span>Homepage 2</a>
+            </div>
+          </div>
           <a href="#residences">Residences</a>
           <a href="#neighborhoods">Neighborhoods</a>
           <a href="#market">Market Analysis</a>
@@ -350,7 +357,7 @@ export default function Home() {
           </button>
         </div>
 
-        <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle menu">
+        <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle menu" aria-expanded={mobileMenuOpen}>
           <span />
           <span />
           <span />
