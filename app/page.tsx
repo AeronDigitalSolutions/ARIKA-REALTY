@@ -138,7 +138,6 @@ export default function Home() {
       gsap.to(".hero-center-content", { y: -42, opacity: .66, ease: "none", scrollTrigger: { trigger: ".worldclass-hero", start: "55% top", end: "bottom top", scrub: .8 } });
 
       const motionSections = [
-        { section: ".value-props-grid", targets: ".value-card", stagger: .1 },
         { section: "#market", targets: ".market-info-side > *, .stat-box, .market-image-side", stagger: .07 },
         { section: "#testimonials", targets: ".section-header-flex > *, .testimonial-feature-card, .testimonial-mini-card", stagger: .075 },
         { section: "#insights", targets: ".section-header-flex > *, .insight-card", stagger: .085 },
@@ -169,7 +168,6 @@ export default function Home() {
         );
 
         const neighborhoodCards = neighborhoodsSection.querySelectorAll<HTMLElement>(".neighborhood-card");
-        const neighborhoodsGrid = neighborhoodsSection.querySelector<HTMLElement>(".neighborhoods-grid");
         gsap.fromTo(neighborhoodCards,
           {
             x: (index) => index % 2 === 0 ? -150 : 150,
@@ -184,10 +182,9 @@ export default function Home() {
             stagger: .14,
             ease: "power4.out",
             scrollTrigger: {
-              trigger: neighborhoodsGrid ?? neighborhoodsSection,
-              start: "top 50%",
-              end: "bottom 8%",
-              toggleActions: "play reverse play reverse",
+              trigger: neighborhoodsSection,
+              start: "top 78%",
+              once: true,
             },
           }
         );
@@ -201,6 +198,108 @@ export default function Home() {
       });
 
       gsap.fromTo(".cta-banner img", { scale: 1.08 }, { scale: 1.015, ease: "none", scrollTrigger: { trigger: ".cta-banner", start: "top bottom", end: "bottom top", scrub: 1.1 } });
+
+      const cinematicStage = document.querySelector<HTMLElement>(".hero-cinematic-stage");
+      const heroPanel = document.querySelector<HTMLElement>(".hero-cinematic-panel");
+      const heroMediaFrame = document.querySelector<HTMLElement>(".hero-media-frame");
+      const parallaxHouse = document.querySelector<HTMLElement>(".hero-parallax-house-wrap");
+      const nextPanel = document.querySelector<HTMLElement>(".hero-next-panel");
+      const navbar = document.querySelector<HTMLElement>(".navbar");
+
+      if (cinematicStage && heroPanel && heroMediaFrame && parallaxHouse && nextPanel && navbar) {
+        gsap.set(nextPanel, { xPercent: 112, autoAlpha: 1 });
+        gsap.set(parallaxHouse, { xPercent: 115, autoAlpha: 0, scale: .94 });
+        const setCinematicNavbar = (active: boolean) => {
+          navbar.classList.toggle("navbar-cinematic", active);
+          if (!active) {
+            gsap.set(navbar, { clearProps: "top,borderRadius,border,boxShadow" });
+          }
+        };
+
+        const cinematicTimeline = gsap.timeline({
+          scrollTrigger: {
+            trigger: cinematicStage,
+            start: () => `top ${window.innerWidth <= 768 ? 68 : 76}px`,
+            end: "+=330%",
+            scrub: 1,
+            pin: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            onEnter: () => setCinematicNavbar(true),
+            onEnterBack: () => setCinematicNavbar(true),
+            onLeave: () => setCinematicNavbar(false),
+            onLeaveBack: () => setCinematicNavbar(false),
+          },
+        });
+
+        cinematicTimeline
+          .fromTo(heroMediaFrame,
+            { scale: 1, x: 0, y: 0, autoAlpha: 1 },
+            { scale: 1.035, x: 0, y: 0, autoAlpha: 1, duration: 1.1, ease: "power3.out" }
+          )
+          .to(navbar, {
+            top: 18,
+            borderRadius: 999,
+            border: "1px solid rgba(255,255,255,.42)",
+            boxShadow: "0 22px 70px rgba(9,19,29,.2)",
+            duration: .7,
+            ease: "power3.out",
+          }, 0)
+          .to(heroMediaFrame, {
+            scale: .34,
+            x: 24,
+            y: -24,
+            borderRadius: 30,
+            duration: 1.7,
+            ease: "power3.inOut",
+          }, 1.15)
+          .to(".hero-display-title", {
+            color: "#061B2D",
+            textShadow: "0 2px 18px rgba(255,255,255,.28)",
+            duration: .8,
+            ease: "power2.inOut",
+          }, 1.45)
+          .to(".hero-display-title em", {
+            color: "#213B52",
+            textShadow: "0 2px 14px rgba(255,255,255,.3)",
+            duration: .8,
+            ease: "power2.inOut",
+          }, 1.45)
+          .to(".hero-gold-badge", {
+            color: "#8A6426",
+            background: "rgba(255,255,255,.94)",
+            borderColor: "rgba(184,139,63,.48)",
+            boxShadow: "0 14px 36px rgba(17,24,39,.1)",
+            duration: .8,
+            ease: "power2.inOut",
+          }, 1.45)
+          .to(".hero-glass-search", {
+            scale: () => window.innerWidth <= 768 ? .9 : .79,
+            x: () => window.innerWidth <= 768 ? 0 : Math.max(0, heroPanel.clientWidth * .1 - 24),
+            y: () => window.innerWidth <= 768 ? 42 : 32,
+            transformOrigin: "100% 100%",
+            boxShadow: "0 30px 70px rgba(24,55,84,.3), 0 8px 20px rgba(16,35,52,.2), inset 0 1px rgba(255,255,255,.5)",
+            duration: 1.25,
+            ease: "power3.inOut",
+          }, 1.5)
+          .to(parallaxHouse, {
+            xPercent: 0,
+            autoAlpha: 1,
+            scale: 1,
+            duration: 1.25,
+            ease: "power4.out",
+          }, 2.55)
+          .to(nextPanel, {
+            xPercent: 0,
+            duration: 1.45,
+            ease: "power4.inOut",
+          }, 4.25)
+          .fromTo(nextPanel.querySelectorAll(".hero-metric-item, .value-card"),
+            { y: 50, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, stagger: .07, duration: .65, ease: "power3.out" },
+            4.8
+          );
+      }
     });
 
     ScrollTrigger.refresh();
@@ -236,13 +335,6 @@ export default function Home() {
         </div>
 
         <nav className="nav-links">
-          <div className="home-dropdown">
-            <button className="home-dropdown-trigger">Home <span>⌄</span></button>
-            <div className="home-dropdown-panel">
-              <a href="/" className="active"><span>01</span>Homepage 1</a>
-              <a href="/home-2"><span>02</span>Homepage 2</a>
-            </div>
-          </div>
           <a href="#residences">Residences</a>
           <a href="#neighborhoods">Neighborhoods</a>
           <a href="#market">Market Analysis</a>
@@ -270,7 +362,9 @@ export default function Home() {
       {/* ----------------------------------------------------
          2. WORLD-CLASS CINEMATIC ARCHITECTURAL HERO
       ---------------------------------------------------- */}
-      <section className="worldclass-hero">
+      <div className="hero-cinematic-stage">
+      <section className="worldclass-hero hero-cinematic-panel">
+        <div className="hero-media-frame">
         <div className="hero-bg-stack" aria-live="polite">
           {heroImages.map((item, index) => <img
             src={item.image}
@@ -282,26 +376,32 @@ export default function Home() {
         </div>
         <div className="hero-bg-overlay" />
 
+        <div className="hero-residence-tabs hero-media-tabs">
+          {heroImages.map((item, idx) => (
+            <button
+              key={item.name}
+              className={`residence-tab-btn ${idx === heroBgIndex ? "active" : ""}`}
+              onClick={() => {
+                setHeroBgIndex(idx);
+                setHeroCycleVersion((version) => version + 1);
+              }}
+            >
+              0{idx + 1} / {item.name}
+            </button>
+          ))}
+        </div>
+        </div>
+
+        <div className="hero-parallax-house-wrap" aria-hidden="true">
+          <img src="/parallax-house.png" alt="" className="hero-parallax-house" />
+        </div>
+
         {/* Hero Top Floating Row */}
         <div className="hero-top-badge-row">
           <span className="hero-gold-badge">
             <span>✦</span> PRIVATE ADVISORY &middot; EST. 2012
           </span>
 
-          <div className="hero-residence-tabs">
-            {heroImages.map((item, idx) => (
-              <button
-                key={item.name}
-                className={`residence-tab-btn ${idx === heroBgIndex ? "active" : ""}`}
-                onClick={() => {
-                  setHeroBgIndex(idx);
-                  setHeroCycleVersion((version) => version + 1);
-                }}
-              >
-                0{idx + 1} / {item.name}
-              </button>
-            ))}
-          </div>
         </div>
 
         {/* Hero Center Display Content */}
@@ -348,6 +448,7 @@ export default function Home() {
 
       </section>
 
+      <div className="hero-next-panel">
       {/* Hero metrics sit outside the image so the architecture can breathe. */}
       <div className="hero-metrics-row hero-metrics-exterior">
           <div className="hero-metric-item">
@@ -387,6 +488,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </div>
+      </div>
 
       <section className="section-wrapper" id="neighborhoods">
         <div className="section-header-flex">
