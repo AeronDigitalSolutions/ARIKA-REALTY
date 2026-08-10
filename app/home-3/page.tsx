@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const homes = [
   ["Goa · India", "Casa Aurelia", "5 beds · 7 baths · 11,200 sq ft", "₹18.5 Cr", "/arika-hero.png"],
@@ -12,13 +14,22 @@ export default function HomeThree() {
   const [menu, setMenu] = useState(false);
   const [mode, setMode] = useState("Buy");
   const [saved, setSaved] = useState<number[]>([]);
+  const parallax = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
     const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
       if (entry.isIntersecting) entry.target.classList.add("is-visible");
     }), { threshold: .12 });
     document.querySelectorAll(".h3-reveal").forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+    const context = gsap.context(() => {
+      if (parallax.current && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        gsap.timeline({ scrollTrigger: { trigger: parallax.current, start: "top top", end: "bottom bottom", scrub: 1.15 } })
+          .to(parallax.current, { "--p": 1, ease: "none" });
+      }
+    });
+    ScrollTrigger.refresh();
+    return () => { observer.disconnect(); context.revert(); };
   }, []);
 
   return <main className="home-three">
@@ -34,12 +45,20 @@ export default function HomeThree() {
     </header>
     <div className={`h3-mobile-menu ${menu ? "open" : ""}`}><a href="/">Homepage 1</a><a href="/home-2">Homepage 2</a><a href="/home-3">Homepage 3</a><a href="#residences">Residences</a></div>
 
-    <section className="h3-hero">
-      <img src="/arika-hero.png" alt="Exceptional contemporary residence" />
-      <div className="h3-shade" />
-      <div className="h3-hero-copy"><p className="h3-eyebrow">Extraordinary homes · India & beyond</p><h1>Space to live.<em>Room to become.</em></h1><p>Exceptional homes, quietly discovered. Personal representation for people who expect more than a transaction.</p></div>
-      <a className="h3-explore" href="#residences">Explore<br/>residences <b>↓</b></a>
-      <div className="h3-coordinates"><span>AR—03</span><span>18.5204° N</span></div>
+    <section className="parallax-hero h3-parallax-hero" ref={parallax}>
+      <div className="parallax-stage">
+        <img className="parallax-sky" src="/parallax-sky-bright.png" alt="" aria-hidden="true" />
+        <div className="parallax-atmosphere" />
+        <img className="parallax-cloud parallax-cloud-far" src="/parallax-cloud-white-far.png" alt="" aria-hidden="true" />
+        <div className="parallax-ghost" aria-hidden="true">ARIKA</div>
+        <div className="parallax-copy"><p className="eyebrow">Private residences · India &amp; beyond</p><h1><span>Built beyond</span><em>the expected.</em></h1></div>
+        <img className="parallax-house" src="/parallax-house.png" alt="Contemporary luxury residence represented by ARIKA Realty" />
+        <img className="parallax-cloud parallax-cloud-near" src="/parallax-cloud-white-near.png" alt="" aria-hidden="true" />
+        <div className="parallax-vignette" />
+        <div className="parallax-statement"><span>Rare addresses · Considered architecture</span><p className="statement-bold-white">A legacy shaped around you.</p></div>
+        <a className="parallax-cta" href="#story"><span>Discover<br/>ARIKA</span><b>↗</b></a>
+        <div className="parallax-meta"><span>AR—03</span><span>Scroll to enter</span><i>↓</i></div>
+      </div>
     </section>
 
     <section className="h3-intro" id="story"><div className="h3-rule h3-reveal"><p className="h3-eyebrow">The ARIKA perspective</p><span>( Since 2012 )</span></div><h2 className="h3-reveal">A home is not an address.<br/>It is the <em>architecture</em> of a life.</h2><div className="h3-intro-note h3-reveal"><p>We represent a considered collection of remarkable homes and the people drawn to them. Every introduction is personal. Every detail, intentional.</p><a href="#contact">Our approach ↗</a></div></section>
