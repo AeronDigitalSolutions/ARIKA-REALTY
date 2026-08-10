@@ -44,7 +44,7 @@ export default function HomeTwo() {
       <nav className={menu ? "open" : ""}>
         <div className="z-home-menu">
           <button aria-haspopup="true">Home <span>＋</span></button>
-          <div className="z-home-panel"><a href="/"><b>01</b> Homepage 1</a><a className="active" href="/home-2"><b>02</b> Homepage 2</a></div>
+          <div className="z-home-panel"><a href="/"><b>01</b> Homepage 1</a><a className="active" href="/home-2"><b>02</b> Homepage 2</a><a href="/home-3"><b>03</b> Homepage 3</a></div>
         </div>
         <a href="#residences">Residences</a><a href="#services">Services</a><a href="#about">About</a>
       </nav>
