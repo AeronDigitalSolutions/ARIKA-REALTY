@@ -341,6 +341,7 @@ export default function Home() {
               <a href="/" className="active"><span>01</span>Homepage 1</a>
               <a href="/home-2"><span>02</span>Homepage 2</a>
               <a href="/home-3"><span>03</span>Homepage 3</a>
+              <a href="/home-4"><span>04</span>Homepage 4</a>
             </div>
           </div>
           <a href="#residences">Residences</a>

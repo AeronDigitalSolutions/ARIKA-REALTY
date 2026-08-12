@@ -37,13 +37,13 @@ export default function HomeThree() {
     <header className="h3-nav">
       <a className="h3-brand" href="/home-3"><img src="/arika-emblem.png" alt=""/><span>ARIKA<small>REALTY</small></span></a>
       <nav>
-        <div className="h3-home-menu"><button>Home <span>⌄</span></button><div><a href="/">01 · Homepage 1</a><a href="/home-2">02 · Homepage 2</a><a className="active" href="/home-3">03 · Homepage 3</a></div></div>
+        <div className="h3-home-menu"><button>Home <span>⌄</span></button><div><a href="/">01 · Homepage 1</a><a href="/home-2">02 · Homepage 2</a><a className="active" href="/home-3">03 · Homepage 3</a><a href="/home-4">04 · Homepage 4</a></div></div>
         <a href="#residences">Residences</a><a href="#story">Our story</a><a href="#journal">Journal</a>
       </nav>
       <a className="h3-nav-cta" href="#contact">Private consultation ↗</a>
       <button className="h3-menu-button" onClick={() => setMenu(!menu)} aria-expanded={menu}>{menu ? "Close" : "Menu"}</button>
     </header>
-    <div className={`h3-mobile-menu ${menu ? "open" : ""}`}><a href="/">Homepage 1</a><a href="/home-2">Homepage 2</a><a href="/home-3">Homepage 3</a><a href="#residences">Residences</a></div>
+    <div className={`h3-mobile-menu ${menu ? "open" : ""}`}><a href="/">Homepage 1</a><a href="/home-2">Homepage 2</a><a href="/home-3">Homepage 3</a><a href="/home-4">Homepage 4</a><a href="#residences">Residences</a></div>
 
     <section className="parallax-hero h3-parallax-hero" ref={parallax}>
       <div className="parallax-stage">
