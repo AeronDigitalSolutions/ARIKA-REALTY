@@ -13,7 +13,6 @@ const residences = [
 ];
 
 export default function HomeTwo() {
-  const [active, setActive] = useState(0);
   const [menu, setMenu] = useState(false);
 
   useEffect(() => {
@@ -32,7 +31,6 @@ export default function HomeTwo() {
         .from(".z-hero-detail > *", { y: 20, opacity: 0, stagger: .08, duration: .8 }, "<.35");
       gsap.fromTo(".z-house", { yPercent: 0 }, { yPercent: 2.5, ease: "none", scrollTrigger: { trigger: ".z-hero", start: "top top", end: "bottom top", scrub: 1.4, invalidateOnRefresh: true } });
       gsap.utils.toArray<HTMLElement>(".z-reveal").forEach((el) => gsap.from(el, { y: 65, opacity: 0, filter: "blur(8px)", duration: 1.1, ease: "power4.out", scrollTrigger: { trigger: el, start: "top 84%", toggleActions: "play none none reverse" } }));
-      gsap.utils.toArray<HTMLElement>(".z-service-row").forEach((el) => gsap.from(el, { xPercent: -9, opacity: 0, duration: 1, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 88%", toggleActions: "play none none reverse" } }));
       gsap.to(".z-collage-card", { y: (i) => -40 - i * 18, rotate: (i) => (i - 1) * 2, ease: "none", scrollTrigger: { trigger: ".z-discover", start: "top bottom", end: "bottom top", scrub: 1 } });
     });
     return () => { ctx.revert(); gsap.ticker.remove(tick); lenis.destroy(); };
@@ -46,7 +44,7 @@ export default function HomeTwo() {
           <button aria-haspopup="true">Home <span>＋</span></button>
           <div className="z-home-panel"><a href="/"><b>01</b> Homepage 1</a><a className="active" href="/home-2"><b>02</b> Homepage 2</a><a href="/home-3"><b>03</b> Homepage 3</a><a href="/home-4"><b>04</b> Homepage 4</a></div>
         </div>
-        <a href="#residences">Residences</a><a href="#services">Services</a><a href="#about">About</a>
+        <a href="#about">About</a><a href="#contact">Contact</a>
       </nav>
       <a className="z-contact-link" href="#contact">Talk to us <span>↗</span></a>
       <button className="z-menu-toggle" onClick={() => setMenu(!menu)} aria-label="Toggle navigation">{menu ? "Close" : "Menu"}</button>
@@ -65,20 +63,6 @@ export default function HomeTwo() {
       <p className="z-label z-reveal">Our perspective</p>
       <h1 className="z-reveal">We find homes that feel<br/>like they were waiting<br/><em>only for you.</em></h1>
       <div className="z-statement-note z-reveal"><span>( 01 )</span><p>ARIKA is a private real estate advisory for design-led residences across India’s most compelling destinations.</p></div>
-    </section>
-
-    <section className="z-residences" id="residences">
-      <div className="z-section-top z-reveal"><p className="z-label">Selected residences</p><span>What we found remarkable</span></div>
-      <div className="z-property-stage">
-        <img key={residences[active].image} src={residences[active].image} alt={residences[active].name} />
-        <div className="z-property-caption"><span>0{active + 1} / 04</span><div><h2>{residences[active].name}</h2><p>{residences[active].place} · {residences[active].type}</p></div><a href="#contact">View residence ↗</a></div>
-      </div>
-      <div className="z-residence-list">{residences.map((home, i) => <button className={active === i ? "active" : ""} onMouseEnter={() => setActive(i)} onFocus={() => setActive(i)} onClick={() => setActive(i)} key={home.name}><span>0{i + 1}</span><strong>{home.name}</strong><small>{home.place}</small><b>↗</b></button>)}</div>
-    </section>
-
-    <section className="z-services" id="services">
-      <div className="z-section-top z-reveal"><p className="z-label">Our services</p><span>What we do—and do really well</span></div>
-      {[["01","Private acquisitions","Quiet access, thoughtful shortlists and an unhurried search."],["02","Residence sales","A considered presentation for homes that deserve the right audience."],["03","Portfolio advisory","Clear intelligence for property decisions that compound over time."],["04","Relocation concierge","From first visit to move-in, every detail handled with care."]].map(([n,t,d]) => <article className="z-service-row" key={n}><span>/{n}</span><h2>{t}</h2><p>{d}</p><a href="#contact">See more ↗</a></article>)}
     </section>
 
     <section className="z-discover">
