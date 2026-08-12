@@ -74,15 +74,17 @@ body {
 
 /* Full-bleed architectural hero and layered entrance */
 .z-page .z-house-shell{position:absolute;inset:0;z-index:2;overflow:hidden;will-change:transform,clip-path,opacity}
-.z-page .z-house{left:0;bottom:-6.5%;z-index:auto;width:100vw;max-width:100vw;height:auto;object-fit:unset;object-position:center bottom;transform:none;will-change:transform}
-.z-page .z-wordmark{will-change:transform,opacity,letter-spacing}
+.z-page .z-house-shell:after{content:"";position:absolute;left:0;right:0;bottom:0;height:18%;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(5,17,20,.2));z-index:2}
+.z-page .z-house{left:50%;bottom:-5%;z-index:auto;width:100vw;max-width:none;height:auto;object-fit:contain;object-position:center bottom;transform:translateX(-50%);filter:drop-shadow(0 -12px 24px rgba(18,34,40,.14)) drop-shadow(0 28px 34px rgba(4,12,15,.3));will-change:transform}
+.z-page .z-wordmark{top:7.5%;font-size:clamp(108px,23.5vw,370px);letter-spacing:-.06em;will-change:transform,opacity,letter-spacing}
 .z-page .z-footer-brand{display:flex;align-items:center;gap:12px;width:max-content;color:#fff}
 .z-page .z-footer-brand img{display:block;width:48px;height:40px;object-fit:contain;filter:none}
 .z-page .z-footer-brand span{font-family:"Cormorant Garamond",serif;font-size:21px;line-height:1;letter-spacing:.18em}
 .z-page .z-footer-brand span b{display:block;margin-top:5px;font-family:Inter,sans-serif;font-size:8px;font-weight:400;letter-spacing:.3em;color:#caa665}
 
 @media(max-width:800px){
-  .z-page .z-house{left:0;width:100vw;max-width:100vw;height:auto}
+  .z-page .z-house{left:50%;bottom:2%;width:130vw;max-width:none;height:auto;transform:translateX(-50%)}
+  .z-page .z-wordmark{top:18%;font-size:28vw;letter-spacing:-.055em}
   .z-page .z-brand img{width:34px}
   .z-page .z-brand span{font-size:16px}
 }

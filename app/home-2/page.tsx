@@ -55,7 +55,7 @@ export default function HomeTwo() {
     <section className="z-hero">
       <div className="z-sun" />
       <div className="z-wordmark" aria-hidden="true">ARIKA</div>
-      <div className="z-house-shell"><img className="z-house" src="/parallax-house-cropped.png" alt="Contemporary private residence at dusk" /></div>
+      <div className="z-house-shell"><img className="z-house" src="/home-2-front-villa.png" alt="Front-facing contemporary private residence at dusk" /></div>
       <div className="z-hero-detail z-hero-left"><span>Private realty</span><p>India · 18.5204° N<br/>73.8567° E</p></div>
       <div className="z-hero-detail z-hero-right"><span>Curated living</span><p>Rare homes for<br/>remarkable lives.</p></div>
       <a className="z-scroll" href="#about"><span>↓</span> Scroll to discover</a>
