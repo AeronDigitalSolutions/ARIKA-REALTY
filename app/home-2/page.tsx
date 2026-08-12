@@ -12,6 +12,13 @@ const residences = [
   { name: "Solace 18", place: "Worli, Mumbai", type: "Sky residence", image: "/pexels-volkerthimm-27307398.jpg.jpeg" },
 ];
 
+const developments = [
+  ["Onyx", "Worli Sea Face", "62-storey residential tower", "/home-4/images/project-onyx.jpg"],
+  ["Meridian", "Alibaug", "Twelve waterfront villas", "/home-4/images/project-meridian.jpg"],
+  ["Solstice", "Bandra West", "Limited-edition residences", "/home-4/images/project-solstice.jpg"],
+  ["Riviera", "Juhu", "Sea-facing duplexes", "/home-4/images/project-riviera.jpg"],
+];
+
 export default function HomeTwo() {
   const [menu, setMenu] = useState(false);
 
@@ -38,13 +45,10 @@ export default function HomeTwo() {
 
   return <main className="z-page">
     <header className="z-nav">
-      <a className="z-brand" href="/home-2" aria-label="Arika Realty home"><img src="/arika-emblem.png" alt="" /><span>ARIKA <b>REALTY</b></span></a>
+      <a className="z-brand" href="/" aria-label="Arika home"><img src="/arika-emblem.png" alt="Arika" /></a>
       <nav className={menu ? "open" : ""}>
-        <div className="z-home-menu">
-          <button aria-haspopup="true">Home <span>＋</span></button>
-          <div className="z-home-panel"><a href="/"><b>01</b> Homepage 1</a><a className="active" href="/home-2"><b>02</b> Homepage 2</a><a href="/home-3"><b>03</b> Homepage 3</a><a href="/home-4"><b>04</b> Homepage 4</a></div>
-        </div>
-        <a href="#about">About</a><a href="#contact">Contact</a>
+        <a href="/">Home</a>
+        <a href="#about">About</a><a href="#developments">Developments</a><a href="#contact">Contact</a>
       </nav>
       <a className="z-contact-link" href="#contact">Talk to us <span>↗</span></a>
       <button className="z-menu-toggle" onClick={() => setMenu(!menu)} aria-label="Toggle navigation">{menu ? "Close" : "Menu"}</button>
@@ -65,6 +69,19 @@ export default function HomeTwo() {
       <div className="z-statement-note z-reveal"><span>( 01 )</span><p>ARIKA is a private real estate advisory for design-led residences across India’s most compelling destinations.</p></div>
     </section>
 
+    <div className="z-h4-insert">
+      <section className="h4-projects" id="developments">
+        <div className="h4-heading z-reveal"><p>Selected developments</p><h2>Work that<br/><em>holds its ground.</em></h2></div>
+        <div className="h4-project-rail">{developments.map((project, i) => <article key={project[0]} className="h4-project z-reveal"><div><img src={project[3]} alt={project[0]}/><span>0{i + 1}</span></div><p>{project[1]}</p><h3>{project[0]}</h3><small>{project[2]}</small></article>)}</div>
+      </section>
+      <section className="h4-stats">
+        <div className="z-reveal"><strong>28</strong><span>Years building in Mumbai</span></div>
+        <div className="z-reveal"><strong>41</strong><span>Completed developments</span></div>
+        <div className="z-reveal"><strong>9.6M</strong><span>Square feet delivered</span></div>
+        <div className="z-reveal"><strong>100%</strong><span>Delivered on schedule</span></div>
+      </section>
+    </div>
+
     <section className="z-discover">
       <div className="z-discover-copy z-reveal"><p className="z-label">Made personal</p><h2>Homes.<br/>Places.<br/>Stories.<br/><em>Yours.</em></h2><p>Tell us how you want to live. We’ll bring the place, the people and the perspective together.</p><a href="#contact">Begin your search <span>→</span></a></div>
       <div className="z-collage">
@@ -73,6 +90,6 @@ export default function HomeTwo() {
     </section>
 
     <section className="z-contact" id="contact"><p className="z-label">A private conversation</p><h2 className="z-reveal">A remarkable home<br/>begins with <em>hello.</em></h2><a href="mailto:hello@arikarealty.com">hello@arikarealty.com <span>↗</span></a></section>
-    <footer className="z-footer"><a className="z-footer-brand" href="/home-2" aria-label="Arika Realty home"><img src="/arika-emblem.png" alt=""/><span>ARIKA <b>REALTY</b></span></a><p>Private residences · India and beyond</p><div><a href="/">Homepage 1</a><a href="/home-2">Homepage 2</a><span>© 2026</span></div></footer>
+    <footer className="z-footer"><a className="z-footer-brand" href="/" aria-label="Arika Realty home"><img src="/arika-emblem.png" alt=""/><span>ARIKA <b>REALTY</b></span></a><p>Private residences · India and beyond</p><div><a href="#about">About</a><a href="#contact">Contact</a><span>© 2026</span></div></footer>
   </main>;
 }
