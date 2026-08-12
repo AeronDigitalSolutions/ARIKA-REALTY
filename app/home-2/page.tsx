@@ -65,7 +65,7 @@ export default function HomeTwo() {
 
     <section className="z-statement" id="about">
       <p className="z-label z-reveal">Our perspective</p>
-      <h1 className="z-reveal">We find homes that feel<br/>like they were waiting<br/><em>only for you.</em></h1>
+      <h1 className="z-reveal">We build homes that feel<br/>like they were waiting<br/><em>only for you.</em></h1>
       <div className="z-statement-note z-reveal"><span>( 01 )</span><p>ARIKA is a private real estate advisory for design-led residences across India’s most compelling destinations.</p></div>
     </section>
 
