@@ -75,7 +75,7 @@ body {
 /* Full-bleed architectural hero and layered entrance */
 .z-page .z-house-shell{position:absolute;inset:0;z-index:2;overflow:hidden;will-change:transform,clip-path,opacity}
 .z-page .z-house-shell:after{content:"";position:absolute;left:0;right:0;bottom:0;height:18%;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(5,17,20,.2));z-index:2}
-.z-page .z-house{left:50%;bottom:-5%;z-index:auto;width:100vw;max-width:none;height:auto;object-fit:contain;object-position:center bottom;transform:translateX(-50%);filter:drop-shadow(0 -12px 24px rgba(18,34,40,.14)) drop-shadow(0 28px 34px rgba(4,12,15,.3));will-change:transform}
+.z-page .z-house{left:50%;bottom:-7%;z-index:auto;width:110vw;max-width:none;height:auto;object-fit:contain;object-position:center bottom;transform:translateX(-50%);filter:drop-shadow(0 -12px 24px rgba(18,34,40,.14)) drop-shadow(0 28px 34px rgba(4,12,15,.3));will-change:transform}
 .z-page .z-wordmark{top:7.5%;font-size:clamp(108px,23.5vw,370px);letter-spacing:-.06em;will-change:transform,opacity,letter-spacing}
 .z-page .z-footer-brand{display:flex;align-items:center;gap:12px;width:max-content;color:#fff}
 .z-page .z-footer-brand img{display:block;width:48px;height:40px;object-fit:contain;filter:none}
