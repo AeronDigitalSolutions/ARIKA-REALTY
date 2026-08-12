@@ -45,7 +45,7 @@ export default function HomeTwo() {
 
   return <main className="z-page">
     <header className="z-nav">
-      <a className="z-brand" href="/" aria-label="Arika home"><img src="/arika-emblem.png" alt="Arika" /></a>
+      <a className="z-brand" href="/" aria-label="Arika Realty home"><img src="/arika-header-lockup.png" alt="Arika Realty" /></a>
       <nav className={menu ? "open" : ""}>
         <a href="/">Home</a>
         <a href="#about">About</a><a href="#developments">Developments</a><a href="#contact">Contact</a>
