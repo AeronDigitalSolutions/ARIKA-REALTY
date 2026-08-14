@@ -6,9 +6,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 
 const services = [
-  ["01", "Residences", "Explore a considered collection of homes shaped around light, landscape and lasting value.", "/home-4/images/project-onyx.jpg"],
-  ["02", "Developments", "From first sketch to final detail, every ARIKA address is built with uncommon care.", "/home-4/images/project-meridian.jpg"],
-  ["03", "Partnerships", "Landowner and investment partnerships grounded in clarity, craft and shared ambition.", "/home-4/images/project-solstice.jpg"],
+  ["01", "Hospitality", "Thoughtfully conceived destinations where warm service, restorative spaces and memorable experiences come together.", "/home-4/images/project-onyx.jpg"],
+  ["02", "Healthcare", "Purpose-built healthcare environments designed around clinical excellence, human comfort and enduring trust.", "/home-4/images/project-meridian.jpg"],
+  ["03", "Real Estate", "Distinctive places shaped by thoughtful planning, refined architecture and long-term value for every community.", "/home-4/images/project-solstice.jpg"],
 ];
 
 const journals = [
@@ -169,7 +169,7 @@ export default function HomeFive() {
     <section className="f5-why" id="why">
       <div className="f5-side f5-reveal"><span>Why ARIKA</span><b>01</b></div>
       <div className="f5-why-copy f5-reveal"><p>Your life is changing. Your home should move with it.</p><h2 className="f5-emphasis"><span>We don’t simply develop addresses.</span><span>We create the setting for what comes next—</span><span>with thoughtful design, enduring materials</span><span>and confidence in every detail.</span></h2></div>
-      <figure className="f5-wide f5-reveal f5-mask-reveal"><img className="f5-pan" src="/home-4/images/mumbai-bmc.jpg" alt="Mumbai skyline" /></figure>
+      <figure className="f5-wide f5-reveal f5-mask-reveal"><img className="f5-pan" src="/arika-builder-development.png" alt="Contemporary ARIKA real estate development" /></figure>
     </section>
 
     <section className="f5-vision" id="vision">
