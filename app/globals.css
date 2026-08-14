@@ -77,6 +77,10 @@
 @media(max-width:800px){.f5-nav.is-compact{height:56px}.f5-emphasis span{display:inline}.f5-emphasis span:after{content:" "}.f5-progress{height:1px}}
 @media(prefers-reduced-motion:reduce){.f5-progress{display:none}.f5-emphasis span{opacity:1!important;transform:none!important}.f5-mask-reveal{clip-path:none!important}}
 
+/* Homepage 5 architectural film panel. */
+.f5-wide video{display:block;width:100%;height:100%;object-fit:cover;transition:filter .8s var(--f5-ease)}
+.f5-wide:hover video{filter:saturate(1.08) contrast(1.03)}
+
 /* Homepage 5 brighter cinematic sky and stronger navigation legibility. */
 .f5-stage{background:#b9e4f2}
 .f5-sky{filter:saturate(.92) brightness(1.04) contrast(.96)}

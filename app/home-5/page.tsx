@@ -169,7 +169,11 @@ export default function HomeFive() {
     <section className="f5-why" id="why">
       <div className="f5-side f5-reveal"><span>Why ARIKA</span><b>01</b></div>
       <div className="f5-why-copy f5-reveal"><p>Your life is changing. Your home should move with it.</p><h2 className="f5-emphasis"><span>We don’t simply develop addresses.</span><span>We create the setting for what comes next—</span><span>with thoughtful design, enduring materials</span><span>and confidence in every detail.</span></h2></div>
-      <figure className="f5-wide f5-reveal f5-mask-reveal"><img className="f5-pan" src="/arika-builder-development.png" alt="Contemporary ARIKA real estate development" /></figure>
+      <figure className="f5-wide f5-reveal f5-mask-reveal">
+        <video className="f5-pan" autoPlay muted loop playsInline preload="metadata" aria-label="Contemporary real estate development">
+          <source src="/arika-development-film.mp4" type="video/mp4" />
+        </video>
+      </figure>
     </section>
 
     <section className="f5-vision" id="vision">
