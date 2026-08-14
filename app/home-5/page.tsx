@@ -6,9 +6,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 
 const services = [
-  ["01", "Hospitality", "Thoughtfully conceived destinations where warm service, restorative spaces and memorable experiences come together.", "/home-4/images/project-onyx.jpg"],
-  ["02", "Healthcare", "Purpose-built healthcare environments designed around clinical excellence, human comfort and enduring trust.", "/home-4/images/project-meridian.jpg"],
-  ["03", "Real Estate", "Distinctive places shaped by thoughtful planning, refined architecture and long-term value for every community.", "/home-4/images/project-solstice.jpg"],
+  ["01", "Hospitality", "Thoughtfully conceived destinations where warm service, restorative spaces and memorable experiences come together.", "/arika-hospitality.png"],
+  ["02", "Healthcare", "Purpose-built healthcare environments designed around clinical excellence, human comfort and enduring trust.", "/arika-healthcare.png"],
+  ["03", "Real Estate", "Distinctive places shaped by thoughtful planning, refined architecture and long-term value for every community.", "/arika-real-estate.png"],
 ];
 
 const journals = [
