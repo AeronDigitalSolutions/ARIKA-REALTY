@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
@@ -151,7 +150,7 @@ export default function HomeFive() {
     <section className="f5-hero">
       <div className="f5-stage">
         <header className="f5-nav">
-          <Link href="/" className="f5-brand"><img src="/arika-header-lockup.png" alt="ARIKA Realty" /></Link>
+          <a href="/" className="f5-brand"><img src="/arika-header-lockup.png" alt="ARIKA Realty" /></a>
           <nav><a href="#why">Why ARIKA</a><a href="#vision">Our vision</a><a href="#services">What we build</a><a href="#journal">Journal</a></nav>
           <a href="#contact" className="f5-pill">Enquire <span>↗</span></a>
         </header>
