@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
@@ -150,7 +151,7 @@ export default function HomeFive() {
     <section className="f5-hero">
       <div className="f5-stage">
         <header className="f5-nav">
-          <a href="/" className="f5-brand"><img src="/arika-header-lockup.png" alt="ARIKA Realty" /></a>
+          <Link href="/" className="f5-brand"><img src="/arika-header-lockup.png" alt="ARIKA Realty" /></Link>
           <nav><a href="#why">Why ARIKA</a><a href="#vision">Our vision</a><a href="#services">What we build</a><a href="#journal">Journal</a></nav>
           <a href="#contact" className="f5-pill">Enquire <span>↗</span></a>
         </header>
@@ -180,13 +181,17 @@ export default function HomeFive() {
       <div className="f5-side f5-reveal"><span>Our point of view</span><b>02</b></div>
       <div className="f5-vision-title"><h2>This isn’t just <span>about real estate.</span></h2></div>
       <div className="f5-shapes">
-        {["/home-4/images/project-meridian.jpg","/home-4/images/amenity-pool.jpg","/home-4/images/interior-living.jpg","/pexels-shox-31640057.jpg.jpeg"].map((src,i)=><figure key={src} className={`shape-${i}`}><img className="f5-pan" src={src} alt="" /></figure>)}
+        {[
+          ["Buy", "/home-4/images/project-meridian.jpg"],
+          ["Sell", "/arika-real-estate.png"],
+          ["Rent", "/home-4/images/interior-living.jpg"],
+        ].map(([label,src],i)=><figure key={label} className={`shape-${i}`}><img className="f5-pan" src={src} alt={`${label} with ARIKA`} /><figcaption>{label}</figcaption></figure>)}
       </div>
-      <p className="f5-vision-note">It’s about identity. Progress. Getting unstuck. You’re not just looking for a place. You’re looking for alignment. That’s what ARIKA helps you build.</p>
+      <p className="f5-vision-note">Buy. Sell. Rent. Move with confidence.</p>
     </section>
 
     <section className="f5-story">
-      <figure className="f5-story-small f5-reveal f5-mask-reveal"><img className="f5-pan" src="/home-4/images/amenity-library.jpg" alt="Material details" /></figure>
+      <figure className="f5-story-small f5-reveal f5-mask-reveal"><img className="f5-pan" src="/home-4/images/tower-upward.jpg" alt="ARIKA construction in progress" /><figcaption>Designed with intent.<br/>Built to endure.</figcaption></figure>
       <div className="f5-story-copy f5-reveal"><span>Built with purpose</span><h2>Clarity at every step.<br/>Character in every space.</h2><p>We build slowly enough to notice what matters—and decisively enough to deliver on every promise.</p><a href="#services">Our approach ↗</a></div>
       <figure className="f5-story-large f5-reveal f5-mask-reveal"><img className="f5-pan" src="/home-4/images/project-verdant.jpg" alt="ARIKA residential development" /></figure>
     </section>
@@ -212,6 +217,6 @@ export default function HomeFive() {
     </section>
 
     <section className="f5-final" id="contact"><img className="f5-pan" src="/home-4/images/mumbai-gateway.jpg" alt="Mumbai waterfront"/><div><span>Begin a conversation</span><h2>Find your place.<br/>We’ll build what’s next.</h2><a className="f5-pill" href="mailto:hello@arikarealty.com">Talk to ARIKA <b>↗</b></a></div></section>
-    <footer className="f5-footer"><div className="f5-group-links"><span>ARIKA Group</span><a href="#">Arika Hospitality</a><a href="#">Arika Healthcare</a><a href="#">Arika Developers</a><a href="#">Arika Realty</a></div><div><span>Visit</span><p>Mumbai, Maharashtra<br/>India</p></div><div><span>Write</span><a href="mailto:hello@arikarealty.com">hello@arikarealty.com</a></div><div><span>Follow</span><a href="#">Instagram</a><a href="#">LinkedIn</a></div><div className="f5-footer-marquee"><img src="/arika-logo-white-transparent.png" alt="ARIKA Realty"/><strong>ARIKA</strong></div><small>© 2026 ARIKA Realty · Privacy · Terms</small></footer>
+    <footer className="f5-footer"><div className="f5-group-links"><span>ARIKA Group</span><a href="#">Arika Hospitality</a><a href="#">Arika Healthcare</a><a href="#">Arika Developers</a><a href="#">Arika Realty</a></div><div><span>Visit</span><p>Mumbai, Maharashtra<br/>India</p></div><div><span>Write</span><a href="mailto:hello@arikarealty.com">hello@arikarealty.com</a></div><div><span>Follow</span><a href="#">Instagram</a><a href="#">LinkedIn</a></div><div className="f5-footer-marquee"><img src="/arika-logo-white-transparent.png" alt="ARIKA Realty"/></div><small>© 2026 ARIKA Realty · Privacy · Terms</small></footer>
   </main>;
 }

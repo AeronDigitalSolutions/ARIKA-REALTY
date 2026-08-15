@@ -77,6 +77,17 @@
 @media(max-width:800px){.f5-nav.is-compact{height:56px}.f5-emphasis span{display:inline}.f5-emphasis span:after{content:" "}.f5-progress{height:1px}}
 @media(prefers-reduced-motion:reduce){.f5-progress{display:none}.f5-emphasis span{opacity:1!important;transform:none!important}.f5-mask-reveal{clip-path:none!important}}
 
+/* Homepage 5 content refinements from review. */
+.f5-shapes figure{position:relative}
+.f5-shapes figcaption{position:absolute;z-index:2;left:50%;top:50%;transform:translate(-50%,-50%);font:600 clamp(18px,2.2vw,34px)/1 Inter,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#fff;text-shadow:0 2px 24px rgba(0,0,0,.75)}
+.f5-shapes figure:after{content:"";position:absolute;inset:0;background:rgba(5,8,9,.25);pointer-events:none}
+.f5-vision-note{font:500 clamp(24px,3vw,44px)/1.05 Inter,sans-serif;letter-spacing:-.04em;max-width:820px}
+.f5-story-small{position:relative;overflow:hidden}
+.f5-story-small figcaption{position:absolute;z-index:2;left:18px;right:18px;bottom:18px;padding:14px 16px;background:rgba(7,9,9,.68);backdrop-filter:blur(10px);color:#fff;font-size:12px;line-height:1.35;letter-spacing:.04em}
+.f5-footer>.f5-footer-marquee{display:flex;justify-content:center;align-items:center}
+.f5-footer>.f5-footer-marquee>img{width:min(420px,34vw);height:auto;max-width:100%;object-fit:contain;object-position:center}
+@media(max-width:800px){.f5-shapes figcaption{font-size:4.5vw}.f5-vision-note{font-size:7vw}.f5-story-small figcaption{font-size:10px}.f5-footer>.f5-footer-marquee>img{width:min(320px,70vw)}}
+
 /* Homepage 5 architectural film panel. */
 .f5-wide video{display:block;width:100%;height:100%;object-fit:cover;transition:filter .8s var(--f5-ease)}
 .f5-wide:hover video{filter:saturate(1.08) contrast(1.03)}
